@@ -5,8 +5,6 @@ This project contains the default branding assets and style used in Open edX app
 
 The file structure serves as an interface to be implemented for custom branding and theming of Open edX.
 
-This project contains branding assets and themes for edx.org.
-
 -----------------------
 How to use this package
 -----------------------
