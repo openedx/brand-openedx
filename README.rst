@@ -38,4 +38,4 @@ Files this package must make available
     :width: 128px
 
 
-``/paragon-theme.scss`` A SASS theme for `@edx/paragon <https://github.com/edx/paragon>`_. Theming documentation in Paragon is coming soon. In the meantime, you can start a theme by the contents of `_variables.scss (after line 7) <https://github.com/edx/paragon/blob/master/scss/core/_variables.scss#L7-L1046>`_ file from the Paragon repository into this file.
+``/paragon/fonts.scss``, ``/paragon/_variables.scss``, ``/paragon/_overrides.scss``  A SASS theme for `@edx/paragon <https://github.com/edx/paragon>`_. Theming documentation in Paragon is coming soon. In the meantime, you can start a theme by the contents of `_variables.scss (after line 7) <https://github.com/edx/paragon/blob/master/scss/core/_variables.scss#L7-L1046>`_ file from the Paragon repository into this file.
