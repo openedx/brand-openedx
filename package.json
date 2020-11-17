@@ -1,6 +1,6 @@
 {
   "name": "@edx/brand-openedx",
-  "version": "1.0.0",
+  "version": "1.0.0-semantically-released",
   "description": "The default branding and SASS theme package containing for Open edX applications. This package is designed to be copied and customized.",
   "repository": {
     "type": "git",
@@ -11,5 +11,8 @@
   "bugs": {
     "url": "https://github.com/edx/brand-openedx/issues"
   },
-  "homepage": "https://github.com/edx/brand-openedx#readme"
+  "homepage": "https://github.com/edx/brand-openedx#readme",
+  "publishConfig": {
+    "access": "public"
+  }
 }
