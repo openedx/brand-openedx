@@ -34,7 +34,13 @@ Files this package must make available
 ``/logo-trademark.svg`` A variant of the logo with a trademark ® or ™. Note: This file must be present. If you don't have a trademark variant of your logo, copy your regular logo and use that.
 
 .. image:: /logo-trademark.svg
-    :alt: edX
+    :alt: logo
+    :width: 128px
+
+``/logo-white.svg`` A variant of the logo for use on dark backgrounds
+
+.. image:: /logo-white.svg
+    :alt: logo
     :width: 128px
 
 ``/favicon.ico`` A site favicon
