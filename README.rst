@@ -37,5 +37,10 @@ Files this package must make available
     :alt: edX
     :width: 128px
 
+``/favicon.ico`` A site favicon
+
+.. image:: /favicon.ico
+    :alt: favicon
+    :width: 32px
 
 ``/paragon/fonts.scss``, ``/paragon/_variables.scss``, ``/paragon/_overrides.scss``  A SASS theme for `@edx/paragon <https://github.com/edx/paragon>`_. Theming documentation in Paragon is coming soon. In the meantime, you can start a theme by the contents of `_variables.scss (after line 7) <https://github.com/edx/paragon/blob/master/scss/core/_variables.scss#L7-L1046>`_ file from the Paragon repository into this file.
