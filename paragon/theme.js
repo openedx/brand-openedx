@@ -2,9 +2,10 @@
 // theme specification found here: https://system-ui.com/theme/. Theme values
 // not defined here will fallback to their Paragon defaults.
 
-const theme = {
+const applyTheme = (oldTheme) => {
+  const theme = { ...oldTheme };
+  return theme;
+}
 
-};
-
-export default theme;
+export default applyTheme;
 
