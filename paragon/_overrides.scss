@@ -1,2 +1,25 @@
 // Use this file to define style overrides for @edx/paragon
 // This file is included after all Paragon styles, but should generally avoid using private mixins in Paragon.
+
+.btn-tertiary {
+    color: $primary;
+
+    &:hover {
+        background-color: $brand;
+    }
+}
+
+.btn-brand,
+.btn-outline-brand,
+.btn-outline-light {
+    color: $primary;
+}
+
+.btn-link,
+.alert-link {
+    color: $blue;
+}
+
+.alert-info {
+    background-color: $light-100;
+}
