@@ -16,7 +16,10 @@
 }
 
 .btn-link,
-.alert-link {
+.alert-link,
+a,
+p > a[href]:not(.btn),
+a.inline-link {
     color: $blue;
 }
 
