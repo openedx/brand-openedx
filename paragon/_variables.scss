@@ -1,2 +1,19 @@
 // Use this file to set SASS variables for @edx/paragon
 // See _variables.scss in https://github.com/edx/paragon/blob/master/scss/core/ for reference
+
+$primary: #00274C;
+$brand: #FFCB05;
+$green: #75988d;
+$teal: #00B2A9;
+$blue: #2F65A7;
+$red: #9A3324;
+$yellow: $brand;
+$orange: #D86018;
+$light: #CFC096;
+
+$dark: $primary;
+$success: $blue;
+$link: $blue;
+$link-color: $blue;
+$inline-link-color: $blue;
+$info: $light;
