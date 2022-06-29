@@ -1,29 +1,12 @@
-Open edX Brand Package Interface
-================================
+@academic-innovation/brand-mogc
+===============================
 
-This project contains the default branding assets and style used in Open edX applications. It is published on npm as `@edx/brand-openedx`.
+This project contains branding assets and style used in Michigan Online Global Classroom.
+It is the MOGC implementation of the branding interface defined in @edx/brand-openedx.
 
-The file structure serves as an interface to be implemented for custom branding and theming of Open edX.
-
------------------------
-How to use this package
------------------------
-
-Applications in Open edX are configured by default to include this package for branding assets and theming visual style.
-
-To use a custom brand and theme...
-
-1. Fork or copy this project. Ensure that it lives in a location accessible to Open edX applications during asset builds. This may be a published git repo, npm, or local folder depending on your situation.
-
-2. Replace the assets in this project with your own logos or SASS theme. Match the filenames exactly. Open edX applications refer to these files by their filepath. Refer to the brand for edx.org at https://github.com/edx/brand for an example.
-
-3. Configure your Open edX instance to consume your custom brand package. Refer to this documentation on configuring the platform: https://open-edx-proposals.readthedocs.io/en/latest/oep-0048-brand-customization.html [TODO: Add a link to documentation on configuring in Open edX MFE pipelines when it exists]
-
-4. Rebuild the assets and microfrontends in your Open edX instance to see the new brand reflected. [TODO: Add link to relevant documentation when it is completed].
-
---------------------------------------
-Files this package must make available
---------------------------------------
+----------------------------------
+Files this package makes available
+----------------------------------
 
 ``/logo.svg``
 
