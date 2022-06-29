@@ -1,17 +1,17 @@
 {
-  "name": "@edx/brand-openedx",
-  "version": "1.0.0-semantically-released",
-  "description": "The default branding and SASS theme package containing for Open edX applications. This package is designed to be copied and customized.",
+  "name": "@academic-innovation/brand-mogc",
+  "version": "13.0.0",
+  "description": "Micro-frontend branding for Global Classroom.",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/edx/brand-openedx.git"
+    "url": "git+https://github.com/academic-innovation/brand-mogc.git"
   },
-  "author": "edX",
+  "author": "University of Michigan Center for Academic Innovation",
   "license": "GPL-3.0-or-later",
   "bugs": {
-    "url": "https://github.com/edx/brand-openedx/issues"
+    "url": "https://github.com/academic-innovation/brand-mogc/issues"
   },
-  "homepage": "https://github.com/edx/brand-openedx#readme",
+  "homepage": "https://github.com/academic-innovation/brand-mogc#readme",
   "publishConfig": {
     "access": "public"
   }
