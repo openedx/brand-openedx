@@ -15,7 +15,7 @@ To use a custom brand and theme...
 
 1. Fork or copy this project. Ensure that it lives in a location accessible to Open edX applications during asset builds. This may be a published git repo, npm, or local folder depending on your situation.
 
-2. Replace the assets in this project with your own logos or SASS theme. Match the filenames exactly. Open edX applications refer to these files by their filepath. Refer to the brand for edx.org at https://github.com/openedx/brand for an example.
+2. Replace the assets in this project with your own logos or SASS theme. Match the filenames exactly. Open edX applications refer to these files by their filepath. Refer to the brand for edx.org at https://github.com/edx/brand for an example.
 
 3. Configure your Open edX instance to consume your custom brand package. Refer to this documentation on configuring the platform: https://open-edx-proposals.readthedocs.io/en/latest/oep-0048-brand-customization.html [TODO: Add a link to documentation on configuring in Open edX MFE pipelines when it exists]
 
