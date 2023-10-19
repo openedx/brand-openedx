@@ -1,6 +1,6 @@
 # Open edX Brand Package Interface
 
-**Warning** This package will no longer recieve updates and the latest version
+**Warning** This package will no longer receive updates. The latest version
 of this package can be found at
 https://www.npmjs.com/package/@openedx/brand-openedx
 
