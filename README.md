@@ -1,11 +1,7 @@
 # Open edX Brand Package Interface
 
-**Warning** This package will no longer receive updates. The latest version
-of this package can be found at
-https://www.npmjs.com/package/@openedx/brand-openedx
-
 This project contains the default branding assets and style used in Open edX
-applications. It is published on npm as `@edx/brand-openedx`.
+applications. It is published on npm as `@openedx/brand-openedx`.
 
 The file structure serves as an interface to be implemented for custom
 branding and theming of Open edX.
