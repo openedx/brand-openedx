@@ -2,6 +2,9 @@
   "name": "@openedx/brand-openedx",
   "version": "1.0.0-semantically-released",
   "description": "The default branding and SASS theme package containing for Open edX applications. This package is designed to be copied and customized.",
+  "scripts":{
+    "build-tokens": "paragon build-tokens --source ./tokens/ --build-dir  <destination_path>"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/openedx/brand-openedx.git"
