@@ -3,17 +3,19 @@ Paragon Design Tokens Compatibility
 ===================================
 
 
-From version 23 `Paragon <https://www.notion.so/Write-the-brand-docs-7a60ece8489e40e1a6ca6ac4b79aac82?pvs=21>`_ supports CSS variables and 
-`design tokens <https://tr.designtokens.org/format/#abstract>`.
+From version 23 `Paragon <https://github.com/openedx/paragon/>`_ supports CSS variables and 
+`design tokens <https://tr.designtokens.org/format/#abstract>`_.
 
-How to structure the brand design tokens
-========================================
+How to structure the brand design tokens files
+==============================================
 
 The file structure in the brand package should be the same as the version of Paragon used as a reference to allow the merge/override during the build time.
+To see the tokens directory structure for the version of Paragon you are targeting, navigate to ``https://github.com/openedx/paragon/tree/TARGET_PARAGON_VERSION/tokens``.
+For example, if you were working with Paragon v23.0.0 you would navigate to https://github.com/openedx/paragon/tree/v23.0.0/tokens.
 
 .. code-block::
   
-    .
+    paragon/
     └── tokens/
         └── src/
             ├── core/
@@ -31,11 +33,21 @@ The file structure in the brand package should be the same as the version of Par
                         └── <name_of_the_file>.json
 
 
-Once you have identified the token to override, you can replace ``<name_of_the_folder>`` and ``<name_of_the_file>`` with the right names. 
+Once you have identified the token to override, you can replace ``<name_of_the_folder>`` and ``<name_of_the_file>`` with the right names.
+Currently, Paragon is organized under **semantic tokens**, for a better understanding visit: 
+`Design tokens implementation in Paragon <https://github.com/openedx/paragon/blob/master/docs/decisions/0019-scaling-styles-with-design-tokens.rst#design-tokens-implementation-in-paragon>`
 
-In terms of tokens, Paragon follows the specifications of the `Design Tokens Community Group <https://tr.designtokens.org/format/#abstract>`_. 
+Tokens format
+=============
 
-The structure that follows to define most of the tokens is ``category > item > subitem > property > state``, for example:
+In terms of tokens, Paragon follows the specifications of the `Design Tokens Community Group <https://tr.designtokens.org/format/#abstract>`_, and
+takes `style dictionary token structure <https://styledictionary.com/info/tokens/#category--type--item>`_ as inspiration:
+
+
+.. image:: ./style_diccionary_tokens.webp
+
+
+With a subtle variation the structure to define most of the Paragon tokens is ``category > item > subitem > type > state``, for example:
 
 .. code-block:: json
   
@@ -43,13 +55,13 @@ The structure that follows to define most of the tokens is ``category > item > s
       "spacing": {    // Category
         "$type": "dimension",                         
         "annotation": {    // Item 
-          "padding": {     // Property
+          "padding": {     // Type
               "$value": ".5rem",
               "$source": "$annotation-padding"
           },
           "arrow-side": {   // Subitem
-            "margin": {     // Property
-              "$value": "{spacing.annotation.padding},
+            "margin": {     // Type
+              "$value": "{spacing.annotation.padding}",
               "$source": "$annotation-arrow-side-margin"
             }
           }
@@ -75,7 +87,7 @@ Each token has specific attributes:
 
 Use the ``source`` attribute to map the tokens in Paragon and create the theme files. Also, it will help you to replace the values in scss files if you have custom variables (see below).
 
-You can check `Paragon tokens <https://github.com/openedx/paragon/tree/alpha/tokens>` to know the folder and token structure, and how to work with modifiers.
+You can check `Paragon tokens <https://github.com/openedx/paragon/tree/alpha/tokens>`_ to know the folder and token structure, and how to work with modifiers.
 
 
 Build the tokens and generate the CSS variables
@@ -83,11 +95,11 @@ Build the tokens and generate the CSS variables
 
 To build the tokens you can use Paragon CLI.
 
-#. Install Paragon
+#. Install Paragon as a dev dependency
 
 .. code-block:: bash
     
-    npm install paragon
+    npm ci
 
 #. Once the tokens have been created. Go to the ``package.json``, there is a script template:
 
@@ -148,4 +160,4 @@ The file must be in the ``dist`` folder and should have:
 		  }
 		}
 
-The paths must be relative to the ``theme-urls.json``file and contain all the variants that you want to use preload.
+The paths must be relative to the ``theme-urls.json`` file and contain all the variants that you want to preload.
