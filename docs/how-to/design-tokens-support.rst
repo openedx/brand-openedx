@@ -93,7 +93,12 @@ You can check `Paragon tokens <https://github.com/openedx/paragon/tree/alpha/tok
 Build the tokens and generate the CSS variables
 ===============================================
 
-To build the tokens you can use Paragon CLI.
+To build the tokens you can use Paragon CLI. You can check its options `here <https://github.com/openedx/paragon?tab=readme-ov-file#paragon-cli>`_. 
+For using the help command run:
+
+.. code-block:: bash
+    
+    npm run pgn -- <name of the command you want to see more information>
 
 #. Install Paragon as a dev dependency
 
@@ -107,16 +112,36 @@ To build the tokens you can use Paragon CLI.
     
     {
       "scripts": {
-        "build-tokens": "paragon build-tokens --source ./tokens/ --build-dir  <destination_path>"
+        "build-tokens": "paragon build-tokens --source ./tokens/ --build-dir  <destination_path> -t <theme_variant> -t <theme_variant>"
       }
     }
     
-Replace the destination with the desired path and run the command, it is recommended to use ``./dist/``. 
-You can check the CLI options `here <https://openedx.atlassian.net/wiki/spaces/BPL/pages/3770744958/Migrating+MFEs+to+Paragon+design+tokens+and+CSS+variables#Paragon-CLI-Documentation>`_
+Replace the destination with the desired path and specify the theme variant to be compiled, then run the command. 
+You can explore the command options using Paragon help for ``build-tokens``.
 
 .. code-block:: bash
     
     npm run build-tokens
+
+# Create the CSS distribution files modifying the template script in ``package.json``:
+
+.. code-block:: json
+    
+    {
+      "scripts": {
+         "build-dist-files": "rm -rf dist && mkdir dist && paragon build-scss --corePath <core_scss_file> --themesPath <themes_css_files> --source",
+      }
+    }
+
+Where ``<themes_css_files>`` is the path created when you run the build-tokens command and ``<core_scss_file>`` is the path to the scss core file, 
+by default **./paragon/core.scss**. Then run the command:
+
+.. code-block:: bash
+    
+    npm run build-dist-files
+
+You can explore the command options using Paragon help for ``build-scss``. Finally, this command should create 3 diffent files (.css, .map, .min.css) for the
+core and each of the available themes; also, the command creates a ``theme-urls.json`` (see below for more details).
 
 #. Publish the package. 
 
@@ -126,9 +151,10 @@ You can check the CLI options `here <https://openedx.atlassian.net/wiki/spaces/B
 The ``theme-urls.json`` file
 =============================
 
-It is recommended to create the `theme-urls.json` if you are working with runtime theming and want to use ``ParagonWebpackPlugin`` to preload the token URLs during the application build time.
+It is recommended to create the `theme-urls.json` if you are working with runtime theming for use the installed package as a fallback, or if want to use 
+``ParagonWebpackPlugin`` to preload the token URLs during the application build time.
 
-The file must be in the ``dist`` folder and should have:
+The file must be in the ``dist`` folder and should looks like this:
 
 .. code-block:: json
     

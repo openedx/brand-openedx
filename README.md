@@ -21,6 +21,10 @@ To use a custom brand and theme\...
     theme. Match the filenames exactly. Open edX applications refer to
     these files by their filepath. Refer to the brand for edx.org at
     <https://github.com/edx/brand> for an example.
+
+    If you are working with Design tokens and CSS varibles please follow the guide 
+    [Paragon Design Tokens Compatibility](./docs/how-to/design-tokens-support.rst)
+
 3.  Configure your Open edX instance to consume your custom brand
     package. Refer to this documentation on configuring the platform:
     https://docs.openedx.org/projects/openedx-proposals/en/latest/architectural-decisions/oep-0048-brand-customization.html
