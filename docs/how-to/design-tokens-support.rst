@@ -44,7 +44,7 @@ In terms of tokens, Paragon follows the specifications of the `Design Tokens Com
 takes `style dictionary token structure <https://styledictionary.com/info/tokens/#category--type--item>`_ as inspiration:
 
 
-.. image:: ./style_diccionary_tokens.webp
+.. image:: ./style_dictionary_tokens.webp
 
 
 With a subtle variation the structure to define most of the Paragon tokens is ``category > item > subitem > type > state``, for example:
@@ -52,15 +52,15 @@ With a subtle variation the structure to define most of the Paragon tokens is ``
 .. code-block:: json
   
     {
-      "spacing": {    // Category
-        "$type": "dimension",                         
-        "annotation": {    // Item 
-          "padding": {     // Type
-              "$value": ".5rem",
-              "$source": "$annotation-padding"
+      "spacing": {              // Category
+        "$type": "dimension",
+        "annotation": {         // Item 
+          "padding": {          // Type
+            "$value": ".5rem",
+            "$source": "$annotation-padding"
           },
-          "arrow-side": {   // Subitem
-            "margin": {     // Type
+          "arrow-side": {       // Subitem
+            "margin": {         // Type
               "$value": "{spacing.annotation.padding}",
               "$source": "$annotation-arrow-side-margin"
             }
@@ -69,25 +69,25 @@ With a subtle variation the structure to define most of the Paragon tokens is ``
       },
       "typography": {
         "annotation": {
-          "font-size": { 
-          "source": "$annotation-font-size", 
-          "$value": "{typography.font.size.sm}", 
-          "$type": "dimension" 
-          },
+          "font-size": {
+            "source": "$annotation-font-size",
+            "$value": "{typography.font.size.sm}",
+            "$type": "dimension"
+          }
         }
-      },
+      }
     }
 
 Each token has specific attributes:
 
-- **Value**: It is the value that will be assigned to the variable, which could be a value or a reference, such as l arrow-side in the above example.
-- **Type**: Indicates the property to be processed (color, dimension, etc..). This value could be defined for the token itself or a group of tokens (e.g. spacing)
+- **Value**: It is the value that will be assigned to the variable, which could be a value or a reference, such as arrow-side in the above example.
+- **Type**: Indicates the property to be processed (color, dimension, etc.). This value could be defined for the token itself or a group of tokens (e.g. spacing)
 - **Source**: This value is additional and indicates the equivalent in saas notation.
 - **Modify**: Optional value that helps to apply a specific token modification.
 
 Use the ``source`` attribute to map the tokens in Paragon and create the theme files. Also, it will help you to replace the values in scss files if you have custom variables (see below).
 
-You can check `Paragon tokens <https://github.com/openedx/paragon/tree/alpha/tokens>`_ to know the folder and token structure, and how to work with modifiers.
+You can check `Paragon tokens <https://github.com/openedx/paragon/tree/release-23.x/tokens>`_ to know the folder and token structure, and how to work with modifiers.
 
 
 Build the tokens and generate the CSS variables
@@ -98,7 +98,7 @@ For using the help command run:
 
 .. code-block:: bash
     
-    npm run pgn -- <name of the command you want to see more information>
+    npm run paragon:help -- <name of the command you want to see more information>
 
 #. Install Paragon as a dev dependency
 
@@ -159,31 +159,31 @@ The file must be in the ``dist`` folder and should looks like this:
 .. code-block:: json
     
     {
-		  "themeUrls": {
-		    "defaults": {
-		      "light": "light"
-		    },
-		    "variants": {
-		      "light": {
-		        "paths": {
-		          "default": "./light.css",
-		          "minified": "./light.min.css"
-		        }
-		      }
-		      "my-theme": {
-		        "paths": {
-		          "default": "./my-theme.css",
-		          "minified": "./my-theme.min.css"
-		        }
-		      }
-		    },
-		    "core": {
-		      "paths": {
-		        "default": "./core.css",
-		        "minified": "./core.min.css"
-		      }
-		    }
-		  }
-		}
+      "themeUrls": {
+        "defaults": {
+          "light": "light"
+        },
+        "variants": {
+          "light": {
+            "paths": {
+              "default": "./light.css",
+              "minified": "./light.min.css"
+            }
+          },
+          "my-theme": {
+            "paths": {
+              "default": "./my-theme.css",
+              "minified": "./my-theme.min.css"
+            }
+          }
+        },
+        "core": {
+          "paths": {
+            "default": "./core.css",
+            "minified": "./core.min.css"
+          }
+        }
+      }
+    }
 
 The paths must be relative to the ``theme-urls.json`` file and contain all the variants that you want to preload.

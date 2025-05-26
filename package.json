@@ -5,7 +5,7 @@
   "scripts": {
     "build-tokens": "paragon build-tokens --source ./paragon/tokens/ --build-dir ./paragon/build -t dark -t light",
     "build-dist-files": "rm -rf dist && mkdir dist && paragon build-scss --corePath ./paragon/core.scss --themesPath ./paragon/build/themes --source",
-    "pgn": "paragon help"
+    "paragon:help": "paragon help"
   },
   "repository": {
     "type": "git",
@@ -24,4 +24,3 @@
     "@openedx/paragon": "^23.0.0"
   }
 }
- 
