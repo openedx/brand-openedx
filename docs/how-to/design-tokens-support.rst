@@ -129,7 +129,7 @@ You can explore the command options using Paragon help for ``build-tokens``.
     
     {
       "scripts": {
-         "build-dist-files": "rm -rf dist && mkdir dist && paragon build-scss --corePath <core_scss_file> --themesPath <themes_css_files> --source",
+         "build-scss": "rm -rf dist && mkdir dist && paragon build-scss --corePath <core_scss_file> --themesPath <themes_css_files> --source",
       }
     }
 
@@ -138,7 +138,7 @@ by default **./paragon/core.scss**. Then run the command:
 
 .. code-block:: bash
     
-    npm run build-dist-files
+    npm run build
 
 You can explore the command options using Paragon help for ``build-scss``. Finally, this command should create 3 diffent files (.css, .map, .min.css) for the
 core and each of the available themes; also, the command creates a ``theme-urls.json`` (see below for more details).

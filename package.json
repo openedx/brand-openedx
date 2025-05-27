@@ -4,7 +4,9 @@
   "description": "The default branding and SASS theme package containing for Open edX applications. This package is designed to be copied and customized.",
   "scripts": {
     "build-tokens": "paragon build-tokens --source ./paragon/tokens/ --build-dir ./paragon/build -t dark -t light",
-    "build-dist-files": "rm -rf dist && mkdir dist && paragon build-scss --corePath ./paragon/core.scss --themesPath ./paragon/build/themes --source",
+    "build-scss": "paragon build-scss --corePath ./paragon/core.scss --themesPath ./paragon/build/themes --source",
+    "build": "make build",
+    "build:watch": "nodemon --ignore dist -x \"make build\"",
     "paragon:help": "paragon help"
   },
   "repository": {
@@ -21,6 +23,7 @@
     "access": "public"
   },
   "devDependencies": {
-    "@openedx/paragon": "^23.0.0"
+    "@openedx/paragon": "^23.0.0",
+    "nodemon": "^3.1.10"
   }
 }
