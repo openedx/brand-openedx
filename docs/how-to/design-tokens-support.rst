@@ -57,12 +57,10 @@ With a subtle variation the structure to define most of the Paragon tokens is ``
         "annotation": {         // Item 
           "padding": {          // Type
             "$value": ".5rem",
-            "$source": "$annotation-padding"
           },
           "arrow-side": {       // Subitem
             "margin": {         // Type
               "$value": "{spacing.annotation.padding}",
-              "$source": "$annotation-arrow-side-margin"
             }
           }
         }
@@ -70,7 +68,6 @@ With a subtle variation the structure to define most of the Paragon tokens is ``
       "typography": {
         "annotation": {
           "font-size": {
-            "source": "$annotation-font-size",
             "$value": "{typography.font.size.sm}",
             "$type": "dimension"
           }
@@ -82,10 +79,7 @@ Each token has specific attributes:
 
 - **Value**: It is the value that will be assigned to the variable, which could be a value or a reference, such as arrow-side in the above example.
 - **Type**: Indicates the property to be processed (color, dimension, etc.). This value could be defined for the token itself or a group of tokens (e.g. spacing)
-- **Source**: This value is additional and indicates the equivalent in saas notation.
 - **Modify**: Optional value that helps to apply a specific token modification.
-
-Use the ``source`` attribute to map the tokens in Paragon and create the theme files. Also, it will help you to replace the values in scss files if you have custom variables (see below).
 
 You can check `Paragon tokens <https://github.com/openedx/paragon/tree/release-23.x/tokens>`_ to know the folder and token structure, and how to work with modifiers.
 
@@ -146,44 +140,3 @@ core and each of the available themes; also, the command creates a ``theme-urls.
 #. Publish the package. 
 
 #. Once it is installed in the application use the Paragon CLI with the ``replace-variables`` command to use your custom tokens.
-
-
-The ``theme-urls.json`` file
-=============================
-
-It is recommended to create the `theme-urls.json` if you are working with runtime theming for use the installed package as a fallback, or if want to use 
-``ParagonWebpackPlugin`` to preload the token URLs during the application build time.
-
-The file must be in the ``dist`` folder and should looks like this:
-
-.. code-block:: json
-    
-    {
-      "themeUrls": {
-        "defaults": {
-          "light": "light"
-        },
-        "variants": {
-          "light": {
-            "paths": {
-              "default": "./light.css",
-              "minified": "./light.min.css"
-            }
-          },
-          "my-theme": {
-            "paths": {
-              "default": "./my-theme.css",
-              "minified": "./my-theme.min.css"
-            }
-          }
-        },
-        "core": {
-          "paths": {
-            "default": "./core.css",
-            "minified": "./core.min.css"
-          }
-        }
-      }
-    }
-
-The paths must be relative to the ``theme-urls.json`` file and contain all the variants that you want to preload.
