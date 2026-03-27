@@ -1,2 +1,47 @@
 // Use this file to set SASS variables for @edx/paragon
 // See _variables.scss in https://github.com/openedx/paragon/blob/master/scss/core/ for reference
+
+// Font families — matches elm-theme
+$font-family-sans-serif: "Inter", "Helvetica Neue", Arial, sans-serif !default;
+$font-family-serif: $font-family-sans-serif !default;
+$font-family-monospace: "Roboto Mono", SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !default;
+
+// Heading sizes (desktop)
+$h1-font-size: 3rem !default;
+$h2-font-size: 2.25rem !default;
+$h3-font-size: 1.75rem !default;
+$h4-font-size: 1.5rem !default;
+$h5-font-size: 1.25rem !default;
+$h6-font-size: 1.125rem !default;
+
+// Heading sizes (mobile)
+$h1-mobile-font-size: 1.875rem !default;
+$h2-mobile-font-size: 1.75rem !default;
+$h3-mobile-font-size: 1.5rem !default;
+$h4-mobile-font-size: 1.375rem !default;
+$h5-mobile-font-size: 1.25rem !default;
+$h6-mobile-font-size: 1.125rem !default;
+
+// Heading weight
+$headings-font-weight: 700 !default;
+
+// Display heading sizes (desktop)
+$display1-size: 3.75rem !default;
+$display2-size: 4.875rem !default;
+$display3-size: 5.625rem !default;
+$display4-size: 6.125rem !default;
+
+// Display heading sizes (mobile)
+$display1-mobile-size: 3rem !default;
+$display2-mobile-size: 3.625rem !default;
+$display3-mobile-size: 4.375rem !default;
+$display4-mobile-size: 5.25rem !default;
+
+// Display heading weights
+$display1-weight: 900 !default;
+$display2-weight: 900 !default;
+$display3-weight: 900 !default;
+$display4-weight: 900 !default;
+
+// Display mobile line height
+$display-mobile-line-height: 1 !default;
