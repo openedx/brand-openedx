@@ -1,7 +1,7 @@
 .PHONY: build build-tokens build-scss dist clean
 build: clean dist build-tokens build-scss
 	cp *.svg *.png *.ico dist/
-	cp -r paragon/{build,images} dist/paragon/
+	cp -r paragon/build paragon/images dist/paragon/
 
 dist:
 	mkdir -p dist/paragon
