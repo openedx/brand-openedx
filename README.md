@@ -59,14 +59,27 @@ fallback image for [Card.ImageCap] component.
 
 ![card-imagecap-fallback](/paragon/images/card-imagecap-fallback.png)
 
+`/core.min.css` (and `/core.css`) Brand-layer core CSS bundle, assembled
+from `paragon/core.scss` by `paragon build-scss` at publish time.
+Consumers import this on top of Paragon's own core CSS.
+
+`/light.min.css` (and `/light.css`) Light theme variant CSS bundle,
+assembled from the token outputs at `paragon/build/themes/light/`.
+Consumers import this for the light theme.
+
+## Source files (for forks customizing the brand)
+
+These files live in this repo as inputs to the build; they are not
+shipped in the published package.
+
 `/paragon/core.scss` Assembly point consumed by `paragon build-scss` and
-emitted as the published `dist/core.css` (alongside the theme variant CSS, e.g.
-`dist/light.css`). Its job is to `@use` the token-generated CSS at
-`./build/core/...` so that those custom properties end up in the bundle
-consumers download. With Paragon 23 this is not where brand customizations go
-(use design tokens for that), but it is the place for non-tokenizable additions
-such as custom `@media` rules, or brand-specific selectors that don't map to
-Paragon components.
+emitted as the published `core.min.css`. Its job is to `@use` the
+token-generated CSS at `./build/core/...` so that those custom
+properties end up in the bundle consumers download. With Paragon 23
+this is not where brand customizations go (use design tokens for that),
+but it is the place for non-tokenizable additions such as custom
+`@media` rules, or brand-specific selectors that don't map to Paragon
+components.
 
 `/paragon/_fonts.scss` SASS partial for `@import` rules that load web
 fonts referenced by tokens (e.g. Google Fonts URLs).
