@@ -17,13 +17,13 @@ To use a custom brand and theme\...
     accessible to Open edX applications during asset builds. This may be
     a published git repo, npm, or local folder depending on your
     situation.
-2.  Replace the assets in this project with your own logos or SASS
-    theme. Match the filenames exactly. Open edX applications refer to
+2.  Replace the assets in this project with your own logos and design
+    tokens. Match the filenames exactly. Open edX applications refer to
     these files by their filepath. Refer to the brand for edx.org at
     <https://github.com/edx/brand> for an example.
 
-    If you are working with Design tokens and CSS varibles please follow the guide 
-    [Paragon Design Tokens Compatibility](./docs/how-to/design-tokens-support.rst)
+    Theme customization is driven by design tokens; follow the guide at
+    [Paragon Design Tokens Compatibility](./docs/how-to/design-tokens-support.rst).
 
 3.  Configure your Open edX instance to consume your custom brand
     package. Refer to this documentation on configuring the platform:
@@ -59,10 +59,24 @@ fallback image for [Card.ImageCap] component.
 
 ![card-imagecap-fallback](/paragon/images/card-imagecap-fallback.png)
 
-`/paragon/fonts.scss`, `/paragon/_variables.scss`,
-`/paragon/_overrides.scss` A SASS theme for
-[\@edx/paragon](https://github.com/openedx/paragon). Theming
-documentation in Paragon is coming soon. In the meantime, you can start
-a theme by the contents of [\_variables.scss (after line
-7)](https://github.com/openedx/paragon/blob/master/scss/core/_variables.scss#L7-L1046)
-file from the Paragon repository into this file.
+`/paragon/core.scss` Assembly point consumed by `paragon build-scss` and
+emitted as the published `dist/core.css` (alongside the theme variant CSS, e.g.
+`dist/light.css`). Its job is to `@use` the token-generated CSS at
+`./build/core/...` so that those custom properties end up in the bundle
+consumers download. With Paragon 23 this is not where brand customizations go
+(use design tokens for that), but it is the place for non-tokenizable additions
+such as custom `@media` rules, or brand-specific selectors that don't map to
+Paragon components.
+
+`/paragon/_fonts.scss` SASS partial for `@import` rules that load web
+fonts referenced by tokens (e.g. Google Fonts URLs).
+
+`/paragon/tokens/core/<category>/*.json`,
+`/paragon/tokens/themes/<variant>/*.json` Design token overrides in
+[Style Dictionary](https://styledictionary.com/) format, and the sole
+supported way to customize the theme with Paragon 23. Files under
+`core/` override Paragon's core tokens (typography, spacing,
+breakpoints, etc.); files under `themes/<variant>/` override
+theme-variant tokens (colors, component values) for that variant
+(currently `light`). See
+[Paragon Design Tokens Compatibility](./docs/how-to/design-tokens-support.rst).
