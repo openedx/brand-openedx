@@ -11,6 +11,72 @@
 @use "./build/core/variables";
 // @use "./build/core/custom-media-breakpoints";
 
+:root {
+  --pgn-color-brand-base: #0a0a0a;
+  --pgn-color-brand-100: #f9f9f9;
+  --pgn-color-brand-200: #eee;
+  --pgn-color-brand-300: #ccc;
+  --pgn-color-brand-400: #bbb;
+  --pgn-color-brand-500: var(--pgn-color-brand-base);
+  --pgn-color-brand-600: #888;
+  --pgn-color-brand-700: #444;
+
+  --pgn-color-primary-base: var(--pgn-color-brand-base);
+  --pgn-color-primary-700: #444;
+
+  --pgn-color-gray-200: #eee;
+  --pgn-color-bg-active: #111;
+
+  --pgn-color-info-500: #265a91;
+  --pgn-color-link-hover: #0c2a48;
+
+  --pgn-color-badge-bg-light: #8252fe26;
+  --pgn-color-badge-text-light: #8252fe;
+
+  --pgn-spacing-spacer-base: 1.25rem;
+
+  --pgn-size-border-radius-base: 1rem;
+  --pgn-size-border-radius-lg: 1.5rem;
+  --pgn-size-border-radius-sm: 0.7rem;
+
+  --pgn-color-card-divider-bg: initial;
+
+  --pgn-elevation-box-shadow-down-1-1-offset-y: 10px;
+  --pgn-elevation-box-shadow-down-1-1-blur: 30px;
+  --pgn-elevation-box-shadow-down-1-1-color: #0000001a;
+
+  --pgn-elevation-box-shadow-down-1: var(
+      --pgn-elevation-box-shadow-down-1-1-offset-x
+    )
+    var(--pgn-elevation-box-shadow-down-1-1-offset-y)
+    var(--pgn-elevation-box-shadow-down-1-1-blur)
+    var(--pgn-elevation-box-shadow-down-1-1-color);
+  --pgn-elevation-box-shadow-down-2: var(--pgn-elevation-box-shadow-down-1);
+
+  --pgn-elevation-data-table-box-shadow: none;
+
+  --pgn-spacing-card-margin-grid-bottom: 2rem;
+
+  --pgn-size-card-image-border-radius: 0.8rem;
+  --pgn-size-card-image-vertical-max-height: 200px;
+
+  --pgn-typography-badge-font-size: 0.8rem;
+
+  --pgn-typography-font-family-base:
+    Poppins, var(--pgn-typography-font-family-sans-serif);
+  --pgn-typography-font-weight-bold: 500;
+
+  --pgn-typography-font-size-h4-base: 1.25rem;
+
+  --pgn-typography-form-input-font-size-base: 1rem;
+
+  --pgn-size-search-field-border-width-base: 1px;
+  --pgn-size-badge-border-radius-base: 11px;
+  --pgn-size-search-field-border-width-focus: 0;
+
+  --pgn-size-card-focus-border-width: 0;
+}
+
 .pgn__data-table-wrapper {
   box-shadow: none;
 }
@@ -27,6 +93,13 @@
 }
 
 .pgn__card {
+  --pgn-typography-badge-font-weight: var(
+    --pgn-typography-font-weight-semi-bold
+  );
+
+  --pgn-spacing-badge-padding-x-base: 0.75rem;
+  --pgn-spacing-badge-padding-y: 0.25rem;
+
   box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 30px;
   border-radius: 1rem;
   transition-duration: 0.1s;
@@ -42,21 +115,42 @@
   &.clickable:hover {
     box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 30px;
   }
-}
 
-.pgn__card .pgn__card-header .pgn__card-header-subtitle-sm {
-  margin-top: 20px;
-}
+  .pgn__card-header {
+    --pgn-spacing-card-spacer-x: 0;
 
-.pgn__card-header-subtitle-sm {
-  display: flex;
-  justify-content: space-between;
-  flex-direction: row-reverse;
+    .pgn__card-header-subtitle-sm {
+      margin-top: 20px;
+      display: flex;
+      justify-content: space-between;
+      flex-direction: row-reverse;
+    }
+
+    .pgn__card-header-actions {
+      margin-inline-end: var(--pgn-spacing-spacer-base);
+    }
+  }
+
+  .pgn__card-footer {
+    padding: 0;
+  }
 }
 
 .pgn__searchfield {
   border-radius: 6px;
   overflow: auto;
+
+  .pgn__searchfield_wrapper {
+    border-radius: var(--pgn-size-border-radius-lg);
+  }
+
+  .form-control {
+    border-radius: var(--pgn-size-border-radius-lg);
+  }
+
+  .pgn__searchfield__button.btn[type="submit"] {
+    border-radius: var(--pgn-size-border-radius-lg);
+  }
 }
 
 .pgn__data-table-layout-wrapper .pgn__data-table-layout-sidebar {
@@ -72,4 +166,27 @@ button:focus:not(:disabled),
 .button:active:not(:disabled),
 .button:focus:not(:disabled) {
   box-shadow: none;
+}
+
+.menu-trigger {
+  border-radius: var(--pgn-size-border-radius-lg);
+}
+
+.course-about-intro {
+  .pgn__card {
+    padding: 0 20px 20px;
+  }
+}
+
+aside .pgn__vstack {
+  border-top: 1px solid var(--pgn-color-gray-200);
+}
+
+.pgn__card.clickable.focus:before,
+.pgn__card.clickable:focus:before,
+.pgn__data-table__selectable-card.is-selected > :first-child:before {
+  box-shadow: var(--pgn-elevation-box-shadow-down-1-1-offset-x)
+    var(--pgn-elevation-box-shadow-down-1-1-offset-y)
+    var(--pgn-elevation-box-shadow-down-1-1-blur)
+    var(--pgn-elevation-box-shadow-down-1-1-color);
 }
