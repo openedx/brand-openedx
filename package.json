@@ -13,7 +13,7 @@
     "build-tokens": "make build-tokens",
     "build-scss": "make build-scss",
     "prepack": "make build",
-    "build:watch": "nodemon --ignore dist -x \"make build\"",
+    "watch:build": "nodemon --ignore dist -x \"make build\"",
     "clean": "make clean",
     "paragon:help": "paragon help"
   },
@@ -31,7 +31,7 @@
     "access": "public"
   },
   "devDependencies": {
-    "@openedx/paragon": "^23.0.0",
+    "@openedx/paragon": "^23.0.0 || 0.0.0-dev",
     "nodemon": "^3.1.10"
   }
 }
