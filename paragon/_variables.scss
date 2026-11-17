@@ -96,11 +96,14 @@ $danger-bg: $error-bg;
 // English/Latin chars fall through to the explicit sans-serif fallbacks below.
 $font-family-noto-serif-tibetan: 'Noto Serif Tibetan';
 $font-family-jomolhari: 'Jomolhari';
+$font-family-literata: 'Literata';
 $font-family-brand-display: "Cormorant Garamond", $font-family-jomolhari, Georgia, serif;
 $font-family-brand-ui: "DM Sans", $font-family-noto-serif-tibetan, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 $font-family-sans-serif: $font-family-noto-serif-tibetan, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 $font-family-base: $font-family-sans-serif;
 $font-family-course-content: $font-family-jomolhari, $font-family-sans-serif;
+// English running text in the classroom reader: a text serif, with system serifs behind it.
+$font-family-reading-english: $font-family-literata, Georgia, "Times New Roman", serif;
 
 // Brand type scale
 $font-size-display: 72px;

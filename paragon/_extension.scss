@@ -978,46 +978,285 @@ main:has(> .course-partner-page) + .site-footer {
   width: 100%;
   max-width: 880px;
   margin: 0 auto;
-  padding: brand.$spacing-8 brand.$spacing-6 brand.$spacing-16;
+  // No space above: the sticky header below has its own, and a gap over it was a band of empty
+  // page between the site's top bar and the class's title.
+  padding: 0 brand.$spacing-6 brand.$spacing-16;
   color: brand.$text-color;
   font-family: brand.$font-family-brand-ui;
 }
 
-.classroom-page__header {
-  display: flex;
-  flex-wrap: wrap;
-  gap: brand.$spacing-4;
-  align-items: flex-start;
-  justify-content: space-between;
-  padding-bottom: brand.$spacing-6;
-  border-bottom: 1px solid brand.$border-color;
+// The pages with no header (a class that could not be opened, one that has ended) keep the room.
+.classroom-page__notice {
+  padding-top: brand.$spacing-8;
+}
 
+.classroom-page__header {
+  // Stays in view under the site's top bar (64px, sticky) while the text scrolls beneath it, and
+  // slides away behind that bar while the reader scrolls down, returning the moment they scroll
+  // up (see `useHideOnScroll`). Wider than the column by the lines' own bleed, so no text shows
+  // down its sides.
+  position: sticky;
+  top: brand.$spacing-16;
+  z-index: 90;
+  display: flex;
+  flex-direction: column;
+  gap: brand.$spacing-4;
+  margin: 0 (-(brand.$spacing-3));
+  padding: brand.$spacing-4 brand.$spacing-3;
+  border-bottom: 1px solid brand.$border-color;
+  background: brand.$color-white;
+  transform: translateY(0);
+  transition: transform 240ms ease, visibility 0s linear 0s;
+}
+
+.classroom-page__header--hidden {
+  // Up past the site's bar, which is in front of it, and out of reach of the keyboard too.
+  visibility: hidden;
+  transform: translateY(calc(-100% - #{brand.$spacing-16}));
+  transition: transform 240ms ease, visibility 0s linear 240ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .classroom-page__header,
+  .classroom-page__header--hidden {
+    transition: none;
+  }
+}
+
+// "← Your classes": a quiet link above the title, to step out to the list.
+// A quiet outlined button with the exit icon, set like the header's other buttons; it turns
+// red on hover because leaving is the one thing here that takes you out of the class.
+// Nested under the header so it outweighs Paragon's `!important` tertiary rules.
+.classroom-page__header .classroom-page__leave {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: brand.$spacing-2;
+  box-sizing: border-box;
+  height: 36px !important;
+  min-height: 36px !important;
+  padding: 0 brand.$spacing-3 !important;
+  border: 1px solid brand.$border-color !important;
+  border-radius: 10px;
+  background: brand.$color-white !important;
+  color: brand.$text-color !important;
+  font-size: brand.$font-size-caption;
+  font-weight: brand.$font-weight-label;
+  line-height: 1;
+  transition: background brand.$interaction-transition, border-color brand.$interaction-transition, color brand.$interaction-transition;
+
+  svg {
+    flex: none;
+    color: brand.$text-color-muted;
+  }
+
+  &:hover,
+  &:focus,
+  &:active {
+    border-color: brand.$color-danger-border !important;
+    background: #fdf1f0 !important;
+    color: brand.$color-danger-dark !important;
+
+    svg {
+      color: brand.$color-danger-dark;
+    }
+  }
+}
+
+// The name of the text, with its English gloss beneath. A text's title is usually
+// Tibetan, where a display face set tight is hard to read, so it takes the content face
+// at a restrained size rather than the page's display size.
+.classroom-page__title {
   h1 {
     margin: 0;
     color: brand.$text-color;
-    font-family: brand.$font-family-brand-display;
-    // The title is often Tibetan, where a display face set tight is hard to read.
-    font-size: clamp(24px, 3.2vw, brand.$font-size-h2);
+    font-family: brand.$font-family-course-content;
+    font-size: clamp(22px, 2.8vw, 28px);
     font-weight: brand.$font-weight-h2;
-    line-height: 1.3;
+    line-height: 1.7;
+  }
+}
+
+.classroom-page__subtitle {
+  margin: brand.$spacing-1 0 0;
+  color: brand.$text-color-muted;
+  font-size: brand.$font-size-caption;
+  line-height: 1.5;
+}
+
+// The header's two columns, as drawn: who the class is on the left (a label, its name, the
+// text's own name), and the room as it is on the right (who is here, over the controls).
+// Bottom-aligned, so the controls line up with the last line of the title block.
+.classroom-page__head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: brand.$spacing-4 brand.$spacing-6;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.classroom-page__title {
+  min-width: 0;
+}
+
+.classroom-page__status-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: brand.$spacing-3;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.classroom-page__side {
+  display: flex;
+  flex-direction: column;
+  gap: brand.$spacing-3;
+  align-items: flex-end;
+}
+
+// "Teaching", above the class's name, in red: the one place a teacher is told what they are
+// to this class. Red because it is not like the other labels on the page: it is the one that
+// says the controls on this screen act on everybody.
+.classroom-page__pill {
+  display: inline-block;
+  padding: brand.$spacing-1 brand.$spacing-3;
+  border: 1px solid brand.$color-danger-border;
+  border-radius: 999px;
+  background: #fadbd8;
+  color: brand.$color-danger-dark;
+  font-size: brand.$font-size-caption;
+  font-weight: brand.$font-weight-semibold;
+  letter-spacing: normal;
+  line-height: 1.4;
+}
+
+@media (max-width: 575px) {
+  // One column: the people count and controls drop under the title, from the left.
+  .classroom-page__side {
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .classroom-page__status-row {
+    justify-content: flex-start;
   }
 }
 
 .classroom-page__meta {
-  margin: brand.$spacing-2 0 0;
+  display: inline-flex;
+  align-items: center;
+  gap: brand.$spacing-2;
+  margin: 0;
   color: brand.$text-color-muted;
   font-size: brand.$font-size-caption;
 }
 
-// The follow toggle. Small and quiet: it matters to the one student who wants to
-// read back, and should not compete with the text for anyone else.
-.classroom-page__controls {
-  display: flex;
-  align-items: center;
-  margin-left: auto;
+// For a teacher the role and the count read as one line of plain text, not two badges: the
+// role in the danger colour, a small divider, then who is here.
+.classroom-page__status-row--teaching {
+  gap: 0;
+
+  .classroom-page__pill {
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+  }
+
+  .classroom-page__meta::before {
+    content: "";
+    width: 1px;
+    height: 12px;
+    margin: 0 brand.$spacing-2;
+    background: brand.$border-color;
+  }
+}
+
+// A dot for the connection: grey while joining, green once the class is live.
+.classroom-page__status {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: brand.$color-bark;
+}
+
+.classroom-page__status--live {
+  background: #3f8f5b;
+}
+
+// The follow toggle and the two menus. One row, one height: every control is the same
+// 40px, so nothing sits higher or lower than its neighbours.
+.classroom-page__follow {
+  // The student's "follow the teacher" switch, over the header buttons. A compact switch in the
+  // brand's saffron when on and a warm grey when off, with its words beside it in the text
+  // colour: the Paragon default was a green track with a navy ring that matched nothing here.
+  // Nested under the class so it outweighs Paragon's own switch rules.
+  .pgn__form-switch {
+    align-items: center;
+    margin: 0;
+  }
 
   .pgn__form-switch-helper-text {
     display: none;
+  }
+
+  .pgn__form-label {
+    margin: 0;
+    color: brand.$text-color;
+    font-size: brand.$font-size-caption;
+    font-weight: brand.$font-weight-label;
+    cursor: pointer;
+  }
+
+  // The knob is a circle drawn as a background image, whose fill Paragon sets in its blue for
+  // the off state and again on focus. Each state names its own here: brown off, white on.
+  .pgn__form-switch-input {
+    width: 2.25rem;
+    height: 1.25rem;
+    margin-right: brand.$spacing-2;
+    border: 0 !important;
+    outline: none !important;
+    background-color: brand.$color-sand !important;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%236B3300'/%3e%3c/svg%3e") !important;
+    box-shadow: none !important;
+    cursor: pointer;
+    transition: background-color brand.$interaction-transition;
+
+    &:checked {
+      background-color: brand.$primary !important;
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23FFFFFF'/%3e%3c/svg%3e") !important;
+    }
+
+    // No ring when pressed with a pointer, and a soft saffron one for the keyboard only.
+    &:focus:not(:focus-visible) {
+      box-shadow: none !important;
+    }
+
+    &:focus-visible {
+      box-shadow: 0 0 0 3px rgba(brand.$color-deep-saffron, 0.3) !important;
+    }
+  }
+}
+
+.classroom-page__controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: brand.$spacing-3;
+  align-items: center;
+
+  // Each control sits in a wrapper (the dropdowns); keep the wrappers from adding height.
+  > .dropdown {
+    display: flex;
+    align-items: center;
+  }
+
+  .pgn__form-switch-helper-text {
+    display: none;
+  }
+
+  .pgn__form-switch {
+    margin: 0;
   }
 
   label {
@@ -1025,20 +1264,168 @@ main:has(> .course-partner-page) + .site-footer {
     color: brand.$text-color-muted;
     font-size: brand.$font-size-caption;
   }
+
+  // The row of controls, as one set. Every one is the same 40px tall with the same thin outline
+  // and the same dark icon, and they answer a pointer the same way: a warm tint and a darker
+  // edge, held while its menu is open. The icon buttons are square; the Class button is as wide
+  // as its word and a small chevron.
+  //
+  // They are Paragon "tertiary" buttons, whose own rule sets a transparent border, a link colour
+  // and a tinted open state with `!important`, so each is written out here, nested, to carry the
+  // same weight. Paragon also adds a caret to every dropdown toggle, which beside our own icons is
+  // clutter, so it is dropped.
+  .classroom-options__toggle,
+  .classroom-contents__toggle,
+  .classroom-notes-button,
+  .classroom-class-menu__toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: brand.$spacing-2;
+    box-sizing: border-box;
+    height: 40px !important;
+    min-height: 40px !important;
+    min-width: 40px;
+    padding: 0;
+    line-height: 1;
+    border: 1px solid brand.$border-color !important;
+    border-radius: 10px;
+    color: brand.$text-color !important;
+    background: brand.$color-white !important;
+    cursor: pointer;
+    transition: background brand.$interaction-transition, border-color brand.$interaction-transition;
+
+    &::after {
+      display: none;
+    }
+
+    svg {
+      display: block;
+      flex: none;
+    }
+
+    &:hover,
+    &:focus,
+    &:active,
+    &[aria-expanded="true"],
+    .show > &.dropdown-toggle {
+      border-color: brand.$color-bark !important;
+      color: brand.$text-color !important;
+      background: brand.$color-linen !important;
+    }
+  }
+
+  .classroom-class-menu__toggle {
+    padding: 0 brand.$spacing-3 0 brand.$spacing-4 !important;
+    font-size: brand.$font-size-caption;
+    font-weight: brand.$font-weight-label;
+
+    // The chevron turns over while the menu is open.
+    svg {
+      color: brand.$text-color-muted;
+      transition: transform brand.$interaction-transition;
+    }
+
+    &[aria-expanded="true"] svg {
+      transform: rotate(180deg);
+    }
+  }
 }
 
-.classroom-page__host {
-  display: flex;
-  flex-wrap: wrap;
-  gap: brand.$spacing-3;
-  align-items: center;
+// The Class menu's panel, set like the reading options' one: a white card with a warm
+// border, and each choice saying what it does underneath.
+.classroom-class-menu__menu {
+  min-width: 280px;
+  padding: brand.$spacing-2;
+  border: 1px solid brand.$color-sand;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
 
-  > span {
-    color: brand.$color-deep-saffron;
-    font-size: brand.$font-size-label;
-    font-weight: brand.$font-weight-label;
-    letter-spacing: 2px;
-    text-transform: uppercase;
+.classroom-class-menu__item {
+  display: flex;
+  gap: brand.$spacing-3;
+  align-items: flex-start;
+  padding: brand.$spacing-3;
+  border-radius: 8px;
+  color: brand.$text-color;
+  white-space: normal;
+
+  &:hover,
+  &:focus {
+    background: brand.$color-linen;
+    color: brand.$text-color;
+  }
+}
+
+.classroom-class-menu__switch {
+  position: relative;
+  flex: none;
+  align-self: center;
+  width: 40px;
+  height: 22px;
+  margin-left: auto;
+  border-radius: 999px;
+  background: brand.$color-sand;
+  transition: background brand.$interaction-transition;
+
+  // The knob.
+  &::after {
+    content: "";
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: brand.$color-white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+    transition: transform brand.$interaction-transition;
+  }
+}
+
+.classroom-class-menu__switch--on {
+  background: brand.$primary;
+
+  &::after {
+    transform: translateX(18px);
+  }
+}
+
+.classroom-class-menu__icon {
+  flex: none;
+  margin-top: 2px;
+  color: brand.$text-color-muted;
+}
+
+.classroom-class-menu__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.classroom-class-menu__title {
+  font-size: brand.$font-size-caption;
+  font-weight: brand.$font-weight-label;
+  line-height: 1.3;
+}
+
+.classroom-class-menu__hint {
+  color: brand.$text-color-muted;
+  font-size: brand.$font-size-label;
+  line-height: 1.4;
+}
+
+// Ending the session is the one choice that affects everyone at once, so it is set in red.
+.classroom-class-menu__item--danger {
+  .classroom-class-menu__title,
+  .classroom-class-menu__icon {
+    color: brand.$color-danger-dark;
+  }
+
+  &:hover,
+  &:focus {
+    background: brand.$color-blush;
   }
 }
 
@@ -1169,34 +1556,403 @@ main:has(> .course-partner-page) + .site-footer {
 
 // The recovery code is shown exactly once, so it is set apart rather than sitting
 // in the flow where it reads as one more line of text.
-.classroom-page__recovery {
-  margin-bottom: brand.$spacing-6;
+// ---------------------------------------------------------------------------
+// Your classes: the list shown on the code screen
+//
+// The code is entered once. After that a class is in this list, and one click opens it
+// from any device, so the cards are the main thing on the screen and are sized to be
+// pressed on a phone.
+// ---------------------------------------------------------------------------
+
+.classroom-classes {
+  display: flex;
+  flex-direction: column;
+  gap: brand.$spacing-3;
+  margin: 0 0 brand.$spacing-8;
+  padding: 0;
+  list-style: none;
+}
+
+.classroom-classes__item {
+  display: flex;
+  flex-direction: column;
+  gap: brand.$spacing-2;
+  width: 100%;
+  min-height: brand.$minimum-touch-target;
   padding: brand.$spacing-4;
   border: 1px solid brand.$border-color;
-  border-radius: 8px;
-  background: brand.$color-linen;
+  border-radius: 12px;
+  background: brand.$color-white;
+  color: brand.$text-color;
+  font-family: brand.$font-family-brand-ui;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color brand.$interaction-transition;
 
-  code {
-    display: block;
-    margin: brand.$spacing-2 0;
-    color: brand.$text-color;
-    font-size: brand.$font-size-body;
-    word-break: break-all;
+  &:hover {
+    border-color: brand.$color-bark;
+  }
+
+  &:focus-visible {
+    outline: brand.$focus-ring-width solid brand.$focus-ring-color;
+    outline-offset: 2px;
   }
 }
 
-.classroom-page__recovery-label {
-  margin: 0;
-  color: brand.$color-deep-saffron;
-  font-size: brand.$font-size-label;
-  font-weight: brand.$font-weight-label;
-  letter-spacing: 2px;
-  text-transform: uppercase;
+// A class's name is often Tibetan, so it takes the content face at a calm size.
+.classroom-classes__name {
+  font-family: brand.$font-family-course-content;
+  font-size: 1.15rem;
+  line-height: 1.6;
 }
 
-.classroom-page__recovery-help {
+.classroom-classes__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: brand.$spacing-3;
+  align-items: center;
+  color: brand.$text-color-muted;
+  font-size: brand.$font-size-caption;
+}
+
+// Which side of the class this account is on. Quiet pills: a reminder, not a banner.
+.classroom-classes__role {
+  padding: brand.$spacing-1 brand.$spacing-3;
+  border-radius: 999px;
+  font-size: brand.$font-size-label;
+  font-weight: brand.$font-weight-label;
+  white-space: nowrap;
+}
+
+.classroom-classes__role--teacher {
+  background: brand.$color-sand;
+  color: brand.$color-deep-saffron;
+}
+
+.classroom-classes__role--student {
+  background: #e8f0f4;
+  color: brand.$color-dharma-teal;
+}
+
+.classroom-classes__join {
+  padding-top: brand.$spacing-6;
+  border-top: 1px solid brand.$border-color;
+
+  h2 {
+    margin-bottom: brand.$spacing-4;
+    font-family: brand.$font-family-brand-display;
+    font-size: brand.$font-size-h3;
+    font-weight: brand.$font-weight-h3;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Inside a class: the code for the board, the wait for the teacher, and the tools
+// ---------------------------------------------------------------------------
+
+// Shown to a student while the teacher is not connected. Informational, not an error: they
+// can read ahead, and the page moves by itself when the teacher arrives.
+.classroom-page__waiting {
+  margin: brand.$spacing-4 0 0;
+  padding: brand.$spacing-3 brand.$spacing-4;
+  border: 1px solid brand.$color-sand;
+  border-radius: 8px;
+  background: brand.$color-parchment;
+  color: brand.$color-deep-brown;
+  font-size: brand.$font-size-caption;
+}
+
+// The session-ended notice for a student who stays: the same quiet band, with the way out on its
+// right so leaving is theirs to choose.
+.classroom-page__ended {
+  display: flex;
+  flex-wrap: wrap;
+  gap: brand.$spacing-2 brand.$spacing-4;
+  align-items: center;
+  justify-content: space-between;
+
+  .classroom-page__ended-back {
+    min-height: 0;
+    padding: 0;
+    font-size: brand.$font-size-caption;
+    font-weight: brand.$font-weight-label;
+  }
+}
+
+// An item that cannot be used just now: left in the menu so it is still explained, but dimmed.
+.classroom-class-menu__item--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+// Manage class: three tabs, the first built for a long class. The modal is a fixed height so
+// switching tabs does not make it jump, and only the member list scrolls, so the search and
+// the tabs stay in reach whether there are five students or five hundred.
+.classroom-manage {
+  .pgn__modal-body {
+    padding-top: 0;
+  }
+
+  // The tabs: a quiet row with a saffron line under the one you are on. Paragon draws each
+  // tab as a box with a heavy navy outline, which reads as a row of buttons; these are
+  // places, so they get an underline and nothing else. Written out border by border
+  // because Paragon sets them with `!important`.
+  .nav-tabs {
+    gap: brand.$spacing-6;
+    margin-bottom: brand.$spacing-4;
+    border-bottom: 1px solid brand.$border-color;
+  }
+
+  .nav-tabs .nav-link {
+    margin: 0;
+    padding: brand.$spacing-3 brand.$spacing-1;
+    border: 0 !important;
+    border-bottom: 3px solid transparent !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    color: brand.$text-color-muted;
+    font-weight: brand.$font-weight-label;
+
+    // The navy box. Paragon draws a focus ring on a tab as a ::before frame, and a tab that
+    // has just been clicked has focus, so the one you chose wore a blue bracket round it.
+    // It is removed for every state; keyboard users get the outline below instead, which only
+    // shows for :focus-visible.
+    &::before,
+    &::after {
+      content: none !important;
+      display: none !important;
+    }
+
+    &:focus {
+      outline: 0;
+    }
+
+    &:hover {
+      border-bottom-color: brand.$color-sand !important;
+      color: brand.$text-color;
+    }
+
+    &.active {
+      border-bottom-color: brand.$accent !important;
+      color: brand.$text-color;
+    }
+
+    &:focus-visible {
+      outline: brand.$focus-ring-width solid brand.$focus-ring-color;
+      outline-offset: 2px;
+    }
+  }
+}
+
+.classroom-manage__panel {
+  display: flex;
+  flex-direction: column;
+  // Items keep the width they need. Stretched, a single button ran the full width of the
+  // dialog and read as a banner; the list and the search say `stretch` for themselves.
+  align-items: flex-start;
+  gap: brand.$spacing-3;
+  min-height: min(420px, 60vh);
+}
+
+.classroom-manage__search,
+.classroom-manage__members,
+.classroom-manage__member--teacher,
+.classroom-manage__empty,
+.classroom-manage__notice,
+.classroom-manage__danger {
+  align-self: stretch;
+}
+
+.classroom-manage__search {
+  flex: none;
+}
+
+// Neutral buttons for the tools in here: one thin outline, the page's own text colour. The
+// brand's outline button is a 2px deep-saffron frame meant for a page's main action, which is
+// too loud for a row of small tools. Three classes deep, to out-weigh Paragon's own rule.
+.classroom-manage .classroom-manage__panel .classroom-manage__button {
+  min-height: 40px;
+  padding: 0 brand.$spacing-4;
+  border: 1px solid brand.$border-color !important;
+  border-radius: 8px;
+  background: brand.$color-white !important;
+  color: brand.$text-color !important;
+  font-weight: brand.$font-weight-label;
+
+  &:hover:not(:disabled) {
+    border-color: brand.$color-bark !important;
+    background: brand.$color-linen !important;
+    color: brand.$text-color !important;
+  }
+}
+
+.classroom-manage .classroom-manage__panel .classroom-manage__button--danger {
+  border-color: brand.$color-danger-border !important;
+  color: brand.$color-danger-dark !important;
+
+  &:hover:not(:disabled) {
+    border-color: brand.$color-danger-dark !important;
+    background: brand.$color-blush !important;
+    color: brand.$color-danger-dark !important;
+  }
+}
+
+// The class code and its Copy button, together in one card: the code is what the teacher
+// reads off, and Copy is what they do with it.
+.classroom-manage__codecard {
+  display: flex;
+  gap: brand.$spacing-4;
+  align-items: center;
+  justify-content: space-between;
+  align-self: stretch;
+  padding: brand.$spacing-4 brand.$spacing-6;
+  border: 1px solid brand.$color-sand;
+  border-radius: 12px;
+  background: brand.$color-linen;
+}
+
+// Archiving is the one irreversible tool, so it sits in its own tinted card, apart.
+.classroom-manage__danger {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: brand.$spacing-3;
+  padding: brand.$spacing-6;
+  border: 1px solid brand.$color-danger-border;
+  border-radius: 12px;
+  background: brand.$color-blush;
+}
+
+.classroom-manage__heading {
+  margin: 0;
+  font-size: brand.$font-size-body;
+  font-weight: brand.$font-weight-semibold;
+}
+
+.classroom-manage__hint {
   margin: 0;
   color: brand.$text-color-muted;
+  font-size: brand.$font-size-caption;
+  line-height: 1.5;
+}
+
+.classroom-manage__empty {
+  margin: brand.$spacing-4 0;
+  color: brand.$text-color-muted;
+  text-align: center;
+}
+
+// Only this scrolls.
+.classroom-manage__members {
+  flex: 1 1 auto;
+  min-height: 120px;
+  max-height: min(340px, 45vh);
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.classroom-manage__member {
+  display: flex;
+  gap: brand.$spacing-3;
+  align-items: center;
+  min-height: 56px;
+  padding: brand.$spacing-2 brand.$spacing-1;
+  border-bottom: 1px solid brand.$color-linen;
+}
+
+// The teacher is set apart above the list, so they are never one name among fifty.
+.classroom-manage__member--teacher {
+  flex: none;
+  border-bottom: 1px solid brand.$border-color;
+}
+
+// A circle of initials: a face-sized mark to find a person by when scanning a long list.
+.classroom-manage__avatar {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: brand.$color-sand;
+  color: brand.$color-deep-brown;
+  font-size: brand.$font-size-label;
+  font-weight: brand.$font-weight-semibold;
+}
+
+.classroom-manage__who {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.classroom-manage__name {
+  overflow: hidden;
+  font-weight: brand.$font-weight-label;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.classroom-manage__meta {
+  overflow: hidden;
+  color: brand.$text-color-muted;
+  font-size: brand.$font-size-label;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// Quiet until wanted: a plain red word, not a row of fifty red outlined buttons. Three
+// classes deep so it beats the tertiary button's link colour.
+.classroom-manage .classroom-manage__panel .classroom-manage__remove {
+  flex: none;
+  color: brand.$color-danger-dark !important;
+  font-size: brand.$font-size-caption;
+  font-weight: brand.$font-weight-label;
+
+  &:hover:not(:disabled) {
+    background: brand.$color-blush !important;
+    color: brand.$color-danger-dark !important;
+  }
+}
+
+.classroom-manage__ask,
+.classroom-manage__confirm {
+  display: flex;
+  flex-wrap: wrap;
+  gap: brand.$spacing-2;
+  align-items: center;
+}
+
+.classroom-manage__ask {
+  flex: none;
+  justify-content: flex-end;
+}
+
+.classroom-manage__question {
+  font-size: brand.$font-size-caption;
+  font-weight: brand.$font-weight-label;
+}
+
+.classroom-manage__code {
+  margin: 0;
+  color: brand.$text-color;
+  font-size: 2rem;
+  font-weight: brand.$font-weight-semibold;
+  letter-spacing: 8px;
+}
+
+.classroom-manage__notice {
+  margin: 0;
+  padding: brand.$spacing-3 brand.$spacing-4;
+  border: 1px solid brand.$color-sand;
+  border-radius: 8px;
+  background: brand.$color-parchment;
+  color: brand.$color-deep-brown;
   font-size: brand.$font-size-caption;
 }
 
@@ -1207,8 +1963,12 @@ main:has(> .course-partner-page) + .site-footer {
 .classroom-reader {
   // Jomolhari, not the UI face. The brand sets it aside for content rather than
   // chrome, and this is a work being read rather than an interface being used.
+  // Black (the brand's espresso), not the page's softer browns: this is the text being
+  // read for an hour, and it should be the darkest thing on the page apart from titles.
+  color: brand.$text-color;
   font-family: brand.$font-family-course-content;
-  font-size: clamp(19px, 2.4vw, 21px);
+  // Times the reader's own size choice (Text size, in the reading options).
+  font-size: calc(clamp(19px, 2.4vw, 21px) * var(--classroom-text-scale, 1));
   // Tibetan stacks vowel signs above and below the base letter, so lines set at a
   // Latin line-height collide. This is deliberately far looser than the brand's body.
   line-height: 1.95;
@@ -1218,14 +1978,24 @@ main:has(> .course-partner-page) + .site-footer {
 
 .classroom-reader__line {
   position: relative;
-  display: block;
+  // A row: the library's label for the line in the margin, then the text. Top-aligned,
+  // with the label's box made as tall as the text's first line (see the label below),
+  // because baseline alignment between small Latin digits and Tibetan, whose baseline
+  // sits elsewhere in the line, left the label hanging below the text.
+  display: flex;
+  align-items: flex-start;
+  gap: brand.$spacing-4;
   // The highlight bleeds into the gutter on both sides, so a marked line reads as a
   // band rather than a boxed-in paragraph. `width: 100%` with negative margins only
   // *shifts* the box — it has to be widened by the same amount, or the band sits
   // twelve pixels left of the column and stops twelve pixels short on the right.
   width: calc(100% + #{brand.$spacing-3 * 2});
-  margin: 0 (-(brand.$spacing-3));
-  padding: brand.$spacing-1 brand.$spacing-3;
+  // Space around each segment, so where one ends and the next begins is plain: run
+  // together, a Tibetan line and its English read as one block and the eye loses its place.
+  margin: 0 (-(brand.$spacing-3)) brand.$spacing-3;
+  // A scroll that stops at the top of a line leaves it clear of the site's sticky top bar.
+  scroll-margin-top: 110px;
+  padding: brand.$spacing-2 brand.$spacing-3;
   // Tibetan breaks at the tsek (U+0F0B) and browsers honour that, so ordinary prose
   // wraps on its own. This is only for a run with no tsek in it, which would
   // otherwise push a line past the edge of the column.
@@ -1245,7 +2015,130 @@ main:has(> .course-partner-page) + .site-footer {
   }
 }
 
+// The margin label (`1-1`, `I-2`): the library's own name for the segment, set small and
+// quiet so it orients without competing with the text. A fixed width keeps every line's
+// text starting at the same left edge whatever its label.
+.classroom-reader__reference {
+  flex: none;
+  width: brand.$spacing-12;
+  color: brand.$text-color-muted;
+  font-family: brand.$font-family-brand-ui;
+  // Sized from the reader and given a line box exactly as tall as one line of the text
+  // (the reader's 1.95 line-height divided by this 0.6em), so the label is centred in the
+  // same band as the first line of Tibetan and the two read as level.
+  font-size: 0.6em;
+  line-height: 3.25;
+  text-align: left;
+  // Not selectable: copying a verse should not carry its label along.
+  user-select: none;
+}
+
+.classroom-reader__body {
+  flex: 1;
+  min-width: 0;
+}
+
 .classroom-reader__line--pickable {
+  cursor: pointer;
+
+  // Pointing at a line only hints that it can be pressed: a faint tint, well short of the
+  // current line's band, and with no saffron bar. It used to be nearly the same band, so a
+  // line the teacher merely passed over looked like the line the class was on.
+  &:hover {
+    background: rgba(brand.$color-sand, 0.28);
+  }
+
+  &:focus-visible {
+    outline: 2px solid brand.$accent;
+    outline-offset: 2px;
+  }
+}
+
+// The current line: a soft band, and nothing else. There was once a saffron rule down the
+// left edge too, but it appeared only on the pressed line and not on the one under the
+// pointer, which read as the highlight behaving inconsistently. The band alone says it.
+.classroom-reader__line--current,
+.classroom-reader__line--current.classroom-reader__line--pickable:hover {
+  background: brand.$color-sand;
+}
+
+// The source and its translation, stacked: Tibetan on top, the translation beneath.
+// Both are spans inside the one line element (a <button> for the teacher), so the
+// current-line band and the teacher's press cover the pair as a single unit.
+.classroom-reader__source,
+.classroom-reader__translation {
+  display: block;
+}
+
+// The translation is an aid under the text being taught, so it is set quieter than it:
+// a Latin text face rather than the Tibetan content face, smaller, and at an ordinary
+// Latin line-height — the loose Tibetan one above would leave it floating away from its line.
+.classroom-reader__translation {
+  margin-top: brand.$spacing-2;
+  color: brand.$text-color;
+  // Literata, the serif the WeBuddhist reader sets its English in, so a translation reads
+  // as the same text in both. Self-hosted in ./fonts/Literata.
+  font-family: brand.$font-family-reading-english;
+  font-size: 0.9em;
+  line-height: 1.6;
+}
+
+// The translation on its own (the "Translation" view). Nothing sits above it, so it is
+// no longer an aside: full size, in the primary text colour, and loose enough to read
+// as prose from across a room.
+.classroom-reader__translation--alone {
+  margin-top: 0;
+  color: brand.$text-color;
+  font-size: 1em;
+  line-height: 1.75;
+}
+
+// Prose layout: the lines run together as continuous text, as a printed page would.
+// The source and translation are inline here rather than stacked, and each line is an
+// inline <span> so a highlight can wrap across the end of a row of text.
+.classroom-reader--prose {
+  .classroom-reader__source,
+  .classroom-reader__translation {
+    display: inline;
+  }
+
+  .classroom-reader__translation {
+    margin-top: 0;
+    margin-inline-start: brand.$spacing-1;
+  }
+
+  .classroom-reader__translation--alone {
+    margin-inline-start: 0;
+  }
+}
+
+.classroom-reader__paragraph {
+  margin: 0 0 brand.$spacing-4;
+  overflow-wrap: break-word;
+}
+
+// The same treatment the segmented layout gives these kinds: the opening matter set
+// apart and centred, the colophon quieter.
+.classroom-reader__paragraph--front_matter {
+  color: brand.$text-color;
+}
+
+.classroom-reader__paragraph--back_matter {
+  margin-top: brand.$spacing-6;
+  color: brand.$text-color;
+  font-size: 0.95em;
+}
+
+.classroom-reader__segment {
+  border-radius: 4px;
+  // A highlight that crosses the end of a row keeps its padding on both pieces rather
+  // than splitting one onto each side.
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  transition: background-color 160ms ease;
+}
+
+.classroom-reader__segment--pickable {
   cursor: pointer;
 
   &:hover {
@@ -1258,21 +2151,645 @@ main:has(> .course-partner-page) + .site-footer {
   }
 }
 
-// The current line. A soft block plus a saffron rule in the gutter, so it reads at
-// a glance from across a room without turning the text itself orange — which would
-// fight the text rather than point at it.
-.classroom-reader__line--current {
+// The current line in prose: the sand block, and a saffron rule beneath, since there is
+// no gutter to put one in when the text runs the full width.
+.classroom-reader__segment--current {
+  background: brand.$color-sand;
+  box-shadow: inset 0 -2px 0 brand.$accent;
+}
+
+// The reading options menu: one button in the header, as the library reader has.
+// The menu is a panel of tiles, as the library reader's is: each choice a bordered
+// rounded tile, the chosen one greyed with a dark outline. What to show runs full width,
+// one per row; layout and section titles are two to a row.
+.classroom-options__menu {
+  width: 300px;
+  max-width: 92vw;
+  padding: brand.$spacing-3;
+  border: 1px solid brand.$color-sand;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+
+  > [role="group"] + [role="group"] {
+    margin-top: brand.$spacing-2;
+  }
+}
+
+.classroom-options__heading {
+  margin: brand.$spacing-4 brand.$spacing-1 brand.$spacing-2;
+  color: #676767;
+  font-size: brand.$font-size-caption;
+  font-weight: brand.$font-weight-label;
+}
+
+.classroom-options__stack {
+  display: flex;
+  flex-direction: column;
+  gap: brand.$spacing-2;
+}
+
+.classroom-options__sizes {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: brand.$spacing-2;
+}
+
+// A size tile is just the letter A, so it is centred and as tall as the others, not padded
+// like a labelled choice.
+.classroom-options__size {
+  align-items: baseline;
+  justify-content: center;
+  padding: brand.$spacing-2 0;
+}
+
+.classroom-options__pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: brand.$spacing-2;
+}
+
+.classroom-options__choice {
+  display: flex;
+  align-items: center;
+  gap: brand.$spacing-3;
+  width: 100%;
+  min-height: brand.$minimum-touch-target;
+  padding: 0 brand.$spacing-4;
+  border: 1px solid brand.$color-sand;
+  border-radius: 10px;
+  background: brand.$color-white;
+  color: brand.$text-color;
+  font-family: brand.$font-family-brand-ui;
+  font-size: brand.$font-size-caption;
+  text-align: left;
+  cursor: pointer;
+
+  svg {
+    flex: none;
+    color: #6b6560;
+  }
+
+  &:hover {
+    border-color: brand.$color-bark;
+  }
+
+  &:focus-visible {
+    outline: brand.$focus-ring-width solid brand.$focus-ring-color;
+    outline-offset: 2px;
+  }
+}
+
+.classroom-options__choice--selected {
+  border-color: brand.$text-color;
+  background: #f4f4f4;
+
+  &:hover {
+    border-color: brand.$text-color;
+  }
+}
+
+
+// Section titles, drawn into the text where each section begins. Block-level and not
+// interactive: pressing one does nothing, so a teacher's tap near a title cannot be
+// mistaken for a move. Sized by depth, outermost largest.
+.classroom-reader__section {
+  // A row, so a leading number and the title that follows are centred against each
+  // other rather than left to find a shared baseline, which Latin digits and Tibetan do
+  // not have.
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0 0.35em;
+  margin: brand.$spacing-8 0 brand.$spacing-3;
+  // A rule above each heading, which is the end of the section before it: the reader sees
+  // where one section stops and the next begins, as in the WeBuddhist reader.
+  padding-top: brand.$spacing-8;
+  border-top: 1px solid #e5e7eb;
+  font-weight: brand.$font-weight-semibold;
+  line-height: 1.6;
+  text-align: center;
+  text-wrap: balance;
+  // So a jump from the contents lands with the title in view rather than flush with the
+  // very top of the window.
+  scroll-margin-top: 110px;
+}
+
+// One blue at descending strength by depth, taken from the WeBuddhist reader's own
+// outline ramp (`--toc-500` to `--toc-800` in its App.css) so a title reads as part of
+// the outline rather than as emphasised running text, and so the two readers agree.
+// Every step is above 4.5:1 on white. Kept here, not in the brand palette: it is the
+// reader's colour for headings and nothing else in the Academy uses it.
+// The number in a section title, in a bold serif with lining figures: the same sturdy
+// serif look as the Tibetan beside it, where the UI face's sans digits looked like they
+// belonged to another page. None of the brand faces is a text serif for Latin ("Noto
+// Serif Tibetan" is limited to the Tibetan block), so this names one that is common on
+// every platform and falls back to the system serif.
+.classroom-reader__section-number {
+  font-family: "Noto Serif", "Source Serif 4", "Times New Roman", Times, serif;
+  font-variant-numeric: lining-nums;
+  font-weight: 700;
+  line-height: 1;
+}
+
+// Nothing comes before the first heading, so there is no section to close with a rule.
+.classroom-reader > .classroom-reader__section:first-child {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+
+$classroom-toc-800: #0a2957;
+$classroom-toc-700: #0c346f;
+$classroom-toc-600: #164488;
+$classroom-toc-500: #2459a8;
+
+.classroom-reader__section--depth-0 {
+  color: $classroom-toc-800;
+  font-size: 1.3em;
+}
+
+.classroom-reader__section--depth-1 {
+  color: $classroom-toc-700;
+  font-size: 1.1em;
+}
+
+.classroom-reader__section--depth-2 {
+  color: $classroom-toc-600;
+  font-size: 1em;
+  font-weight: 500;
+}
+
+.classroom-reader__section--depth-3 {
+  color: $classroom-toc-500;
+  font-size: 0.9em;
+  font-weight: 500;
+}
+
+// The contents, as a drawer down the right-hand side. A table of contents is long, and some
+// headings wrap, so a floating menu covered the very text it was for. Down the side it can stay
+// open as a map, with the heading the class is under marked.
+@keyframes classroom-drawer-in {
+  from { transform: translateX(24px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+.classroom-drawer {
+  position: fixed;
+  z-index: 1040;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  width: min(380px, 100vw);
+  border-left: 1px solid brand.$border-color;
+  background: brand.$color-white;
+  box-shadow: -8px 0 24px rgba(0, 0, 0, 0.08);
+  animation: classroom-drawer-in 180ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .classroom-drawer {
+    animation: none;
+  }
+}
+
+// A phone gives the drawer the whole screen: there is no room beside the text.
+@media (max-width: 575px) {
+  .classroom-drawer {
+    width: 100vw;
+    border-left: 0;
+  }
+}
+
+.classroom-drawer__header {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  min-height: 64px;
+  padding: 0 brand.$spacing-3 0 brand.$spacing-6;
+  border-bottom: 1px solid brand.$border-color;
+}
+
+.classroom-drawer__title {
+  flex: 1 1 auto;
+  margin: 0;
+  font-family: brand.$font-family-brand-display;
+  font-size: brand.$font-size-h3;
+  font-weight: brand.$font-weight-h3;
+}
+
+.classroom-drawer__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: brand.$minimum-touch-target;
+  height: brand.$minimum-touch-target;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: brand.$text-color-muted;
+  cursor: pointer;
+
+  &:hover {
+    background: brand.$color-linen;
+    color: brand.$text-color;
+  }
+
+  &:focus-visible {
+    outline: brand.$focus-ring-width solid brand.$focus-ring-color;
+    outline-offset: 2px;
+  }
+}
+
+// Only the list scrolls, so the title and the way out stay put however long it is.
+.classroom-drawer__list {
+  flex: 1 1 auto;
+  margin: 0;
+  padding: brand.$spacing-3 brand.$spacing-3 brand.$spacing-8;
+  overflow-y: auto;
+  list-style: none;
+}
+
+// A heading is a row: a fold (for a section with things in it), then the heading itself. Rows
+// step in by depth, in small steps, so a deep tree does not run out of width; the weight and size
+// step down with it, so the chapters read as chapters and the finest headings as detail.
+.classroom-drawer__row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1px;
+  padding-right: brand.$spacing-1;
+  border-radius: 6px;
+
+  &:hover {
+    background: brand.$color-linen;
+  }
+}
+
+.classroom-drawer__row--depth-1 { padding-left: 12px; }
+.classroom-drawer__row--depth-2 { padding-left: 24px; }
+.classroom-drawer__row--depth-3 { padding-left: 36px; }
+.classroom-drawer__row--depth-4 { padding-left: 48px; }
+
+.classroom-drawer__row--active {
   background: brand.$color-sand;
 
-  &::before {
-    content: "";
-    position: absolute;
+  &:hover {
+    background: brand.$color-sand;
+  }
+
+  .classroom-drawer__text {
+    font-weight: brand.$font-weight-semibold;
+  }
+}
+
+// The fold, or a blank the same width where there is nothing to fold, so every title starts the
+// same distance from it.
+.classroom-drawer__fold {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 36px;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: brand.$text-color-muted;
+  cursor: pointer;
+  // Pointing right when folded, and down when open.
+  svg {
+    transform: rotate(-90deg);
+    transition: transform brand.$interaction-transition;
+  }
+
+  &:hover {
+    color: brand.$text-color;
+  }
+
+  &:focus-visible {
+    outline: brand.$focus-ring-width solid brand.$focus-ring-color;
+    outline-offset: -2px;
+  }
+}
+
+.classroom-drawer__fold--open svg {
+  transform: rotate(0deg);
+}
+
+.classroom-drawer__fold--none {
+  cursor: default;
+}
+
+.classroom-drawer__item {
+  display: flex;
+  flex: 1 1 auto;
+  gap: brand.$spacing-2;
+  align-items: baseline;
+  min-width: 0;
+  min-height: 36px;
+  padding: brand.$spacing-1 brand.$spacing-2 brand.$spacing-1 0;
+  border: 0;
+  background: transparent;
+  color: brand.$text-color;
+  text-align: left;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: brand.$focus-ring-width solid brand.$focus-ring-color;
+    outline-offset: -2px;
+  }
+
+  &:disabled {
+    cursor: default;
+    opacity: 0.55;
+  }
+}
+
+// The number, in the interface face and set small, muted, and with figures of one width so a
+// column of them lines up. It is Latin beside Tibetan, which sit on different baselines, so it
+// is its own element rather than the front of the title.
+.classroom-drawer__num {
+  flex: none;
+  min-width: 2.2em;
+  color: brand.$text-color-muted;
+  font-family: brand.$font-family-brand-ui;
+  font-size: brand.$font-size-caption;
+  font-variant-numeric: tabular-nums;
+}
+
+// Tibetan headings are set in the content face, and wrap.
+.classroom-drawer__text {
+  min-width: 0;
+  font-family: brand.$font-family-course-content;
+  font-size: 1rem;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+// Weight and size step down with depth.
+.classroom-drawer__row--depth-0 .classroom-drawer__text {
+  font-size: 1.08rem;
+  font-weight: brand.$font-weight-semibold;
+}
+
+.classroom-drawer__row--depth-1 .classroom-drawer__text {
+  font-weight: brand.$font-weight-label;
+}
+
+.classroom-drawer__row--depth-3 .classroom-drawer__text,
+.classroom-drawer__row--depth-4 .classroom-drawer__text {
+  font-size: 0.94rem;
+}
+
+// ---------------------------------------------------------------------------
+// Notes (students only, for now): highlights in the text, the bar over a selection,
+// and the screens for a note and for all of them.
+// ---------------------------------------------------------------------------
+
+// The four highlight colours. Translucent, so the black text underneath stays as readable
+// as it was and overlapping highlights show both. Shared by the highlight in the text, the
+// swatch that makes it and the quote in the list, so a colour looks the same everywhere.
+$classroom-note-yellow: rgba(255, 214, 10, 0.45);
+$classroom-note-green: rgba(76, 175, 80, 0.38);
+$classroom-note-blue: rgba(66, 165, 245, 0.38);
+$classroom-note-pink: rgba(240, 98, 146, 0.32);
+
+.classroom-note--yellow { background: $classroom-note-yellow; }
+.classroom-note--green { background: $classroom-note-green; }
+.classroom-note--blue { background: $classroom-note-blue; }
+.classroom-note--pink { background: $classroom-note-pink; }
+
+// A highlight in the text. Not a link: it is the student's own mark, so it takes the
+// text's own colour and shows it can be opened only by a pointer and a hairline beneath.
+.classroom-note {
+  border-radius: 3px;
+  color: inherit;
+  cursor: pointer;
+  // A highlight that wraps onto a second row keeps its shape on both rows.
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+
+  &:focus-visible {
+    outline: 2px solid brand.$focus-ring-color;
+    outline-offset: 1px;
+  }
+}
+
+// One with words behind it is underlined, so a plain highlight and an annotated one can be
+// told apart at a glance without opening either.
+.classroom-note--has-body {
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 3px;
+}
+
+// The bar over selected words. Fixed to the viewport so it stays by the words as the page
+// scrolls; the page sets where through three custom properties.
+.classroom-selection-bar {
+  position: fixed;
+  z-index: 1050;
+  top: max(brand.$spacing-2, calc(var(--selection-top) - 52px));
+  left: clamp(brand.$spacing-4, var(--selection-left), calc(100vw - 260px));
+  display: flex;
+  gap: brand.$spacing-2;
+  align-items: center;
+  padding: brand.$spacing-2 brand.$spacing-3;
+  border: 1px solid brand.$border-color;
+  border-radius: 999px;
+  background: brand.$color-white;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.14);
+  // Pressing a button here must not clear the selection it is about.
+  user-select: none;
+  -webkit-user-select: none;
+  transform: translateX(-50%);
+}
+
+// On a phone: along the bottom, over nothing. A phone shows its own Copy menu over a
+// selection and ours would sit on top of it; the bottom of the screen is where neither the
+// selection handles nor that menu are.
+@media (max-width: 575px) {
+  .classroom-selection-bar {
+    top: auto;
+    bottom: 0;
     left: 0;
-    top: brand.$spacing-1;
-    bottom: brand.$spacing-1;
-    width: 3px;
-    border-radius: 2px;
-    background: brand.$accent;
+    right: 0;
+    justify-content: center;
+    padding: brand.$spacing-3 brand.$spacing-4 calc(#{brand.$spacing-3} + env(safe-area-inset-bottom, 0px));
+    border-width: 1px 0 0;
+    border-radius: 0;
+    transform: none;
+  }
+}
+
+.classroom-selection-bar__swatch {
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border: 2px solid transparent;
+  border-radius: 50%;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: brand.$focus-ring-width solid brand.$focus-ring-color;
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+}
+
+// The colour a note is now, in the dialog that changes it.
+.classroom-selection-bar__swatch--chosen {
+  border-color: brand.$text-color;
+}
+
+.classroom-note-toast {
+  position: fixed;
+  z-index: 1060;
+  right: brand.$spacing-4;
+  bottom: brand.$spacing-4;
+  max-width: min(420px, calc(100vw - #{brand.$spacing-8}));
+}
+
+.classroom-note-dialog__quote,
+.classroom-notes-panel__quote {
+  margin: 0 0 brand.$spacing-4;
+  padding: brand.$spacing-2 brand.$spacing-3;
+  border-radius: 6px;
+  color: brand.$text-color;
+  line-height: 1.7;
+}
+
+// The words being annotated take the face they are read in.
+.classroom-note-dialog__quote--source,
+.classroom-notes-panel__quote[lang="bo"] {
+  font-family: brand.$font-family-course-content;
+}
+
+.classroom-note-dialog__quote {
+  background: brand.$color-linen;
+}
+
+.classroom-note-dialog__colors {
+  display: flex;
+  gap: brand.$spacing-3;
+  align-items: center;
+  margin: 0 0 brand.$spacing-4;
+  padding: 0;
+  border: 0;
+
+  legend {
+    float: left;
+    width: auto;
+    margin: 0 brand.$spacing-3 0 0;
+    color: brand.$text-color-muted;
+    font-size: brand.$font-size-caption;
+  }
+}
+
+.classroom-notes-panel__intro {
+  margin: 0 0 brand.$spacing-4;
+  color: brand.$text-color-muted;
+  font-size: brand.$font-size-caption;
+}
+
+.classroom-notes-panel__list {
+  display: flex;
+  flex-direction: column;
+  gap: brand.$spacing-3;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+// Each note is a card: the words it marks, in a quote with a bar in the highlight's own colour
+// down its side, then what the student wrote, then what can be done with it. The quote is
+// capped at three lines because a long passage would otherwise push every other note off the
+// screen; "Go to line" shows the rest in the text.
+.classroom-notes-panel__item {
+  padding: brand.$spacing-4;
+  border: 1px solid brand.$border-color;
+  border-radius: 12px;
+  background: brand.$color-white;
+}
+
+.classroom-notes-panel .classroom-notes-panel__quote {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  margin: 0 0 brand.$spacing-3;
+  padding: brand.$spacing-1 0 brand.$spacing-1 brand.$spacing-3;
+  border-left: 4px solid brand.$color-sand;
+  border-radius: 0;
+  background: transparent;
+  font-size: brand.$font-size-caption;
+  line-height: 1.7;
+
+  &.classroom-note--yellow { border-left-color: #e0b200; }
+  &.classroom-note--green { border-left-color: #4caf50; }
+  &.classroom-note--blue { border-left-color: #42a5f5; }
+  &.classroom-note--pink { border-left-color: #f06292; }
+}
+
+.classroom-notes-panel__body {
+  margin: 0 0 brand.$spacing-3;
+  color: brand.$text-color;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.classroom-notes-panel__actions {
+  display: flex;
+  gap: brand.$spacing-2;
+  margin: 0 (-(brand.$spacing-2)) (-(brand.$spacing-2));
+  padding-top: brand.$spacing-2;
+  border-top: 1px solid brand.$border-color;
+}
+
+// Quiet text buttons in the brand's brown, with a warm tint on hover. Nested to outweigh
+// Paragon's `!important` tertiary rules.
+.classroom-notes-panel .classroom-notes-panel__action {
+  min-height: 0 !important;
+  padding: brand.$spacing-2 brand.$spacing-3 !important;
+  border-radius: 8px;
+  background: transparent !important;
+  color: brand.$primary !important;
+  font-size: brand.$font-size-caption;
+  font-weight: brand.$font-weight-label;
+
+  &:hover:not(:disabled),
+  &:focus-visible {
+    background: brand.$color-linen !important;
+  }
+
+  &:disabled {
+    opacity: 0.4;
+  }
+}
+
+.classroom-notes-panel .classroom-notes-panel__close {
+  height: 40px !important;
+  padding: 0 brand.$spacing-4 !important;
+  border: 1px solid brand.$border-color !important;
+  border-radius: 10px;
+  background: brand.$color-white !important;
+  color: brand.$text-color !important;
+  font-size: brand.$font-size-caption;
+  font-weight: brand.$font-weight-label;
+
+  &:hover,
+  &:focus-visible {
+    border-color: brand.$color-bark !important;
+    background: brand.$color-linen !important;
   }
 }
 
@@ -1287,18 +2804,19 @@ main:has(> .course-partner-page) + .site-footer {
 // `/v2/editions/{id}/segmentation/segments` before adding another.
 
 // The opening matter: the work's name and its homage, set apart from the body.
+// Front matter reads like the rest of the text. It was once centred and set larger, but
+// the opening matter is several long lines, not a short title, and centred lines of
+// uneven length have no left edge to return to: hard to read along. The section titles
+// above it stay centred; they are short.
 .classroom-reader__line--front_matter {
-  margin-bottom: brand.$spacing-4;
-  color: brand.$text-color-primary;
-  font-size: 1.15em;
-  text-align: center;
-  text-wrap: balance;
+  color: brand.$text-color;
 }
 
-// Quoted root text, usually metrical. Indented so it reads as quotation rather than
-// as the commentary around it.
+// Quoted root text, usually metrical. Once indented, but with the margin label already
+// taking room on the left the indent only narrowed the column, so verse now sits level
+// with the commentary. Kept as a rule so the kind stays an accounted-for one.
 .classroom-reader__line--verse {
-  padding-left: brand.$spacing-8;
+  // Intentionally empty.
 }
 
 // Ordinary commentary prose — the default, and the bulk of most texts. It needs no
@@ -1311,16 +2829,199 @@ main:has(> .course-partner-page) + .site-footer {
 // The closing colophon: who wrote it, where, and at whose request.
 .classroom-reader__line--back_matter {
   margin-top: brand.$spacing-6;
-  color: brand.$text-color-light;
+  color: brand.$text-color;
   font-size: 0.95em;
 }
 
 @media (max-width: 575px) {
   .classroom-page {
-    padding: brand.$spacing-6 brand.$spacing-4 brand.$spacing-8;
+    // No top padding, as on a wide screen: the sticky header carries its own.
+    padding: 0 brand.$spacing-4 brand.$spacing-8;
   }
 
-  .classroom-reader__line--verse {
-    padding-left: brand.$spacing-4;
+  // Less room on a phone: a narrower margin for the label.
+  .classroom-reader__reference {
+    width: brand.$spacing-8;
   }
+}
+
+// Every "are you sure?" in the classroom (leaving a class, ending a session). A plain title,
+// what will happen in the quiet text colour, and two buttons of one height, with the one that
+// goes ahead in red. Nested under `.classroom-confirm` to outweigh Paragon's `!important` rules.
+.classroom-confirm {
+  .pgn__modal-header {
+    padding: brand.$spacing-6 brand.$spacing-6 brand.$spacing-2;
+  }
+
+  .pgn__modal-title {
+    font-family: brand.$font-family-brand-display;
+    font-size: brand.$font-size-h3;
+    font-weight: brand.$font-weight-h3;
+  }
+
+  .classroom-confirm__body {
+    padding: 0 brand.$spacing-6 brand.$spacing-4;
+
+    p {
+      margin: 0;
+      color: brand.$text-color-muted;
+      font-size: brand.$font-size-caption;
+      line-height: 1.6;
+    }
+
+    .classroom-confirm__error {
+      margin-top: brand.$spacing-3;
+      color: brand.$color-danger-dark;
+    }
+  }
+
+  .pgn__modal-footer {
+    padding: brand.$spacing-2 brand.$spacing-6 brand.$spacing-6;
+    border-top: 0;
+  }
+
+  .classroom-confirm__actions {
+    display: flex;
+    gap: brand.$spacing-3;
+    justify-content: flex-end;
+    width: 100%;
+  }
+
+  .classroom-confirm__cancel,
+  .classroom-confirm__go {
+    box-sizing: border-box;
+    height: 40px !important;
+    min-height: 40px !important;
+    padding: 0 brand.$spacing-4 !important;
+    border-radius: 10px;
+    font-size: brand.$font-size-caption;
+    font-weight: brand.$font-weight-label;
+    line-height: 1;
+  }
+
+  .classroom-confirm__cancel {
+    border: 1px solid brand.$border-color !important;
+    background: brand.$color-white !important;
+    color: brand.$text-color !important;
+
+    &:hover,
+    &:focus {
+      border-color: brand.$color-bark !important;
+      background: brand.$color-linen !important;
+    }
+  }
+}
+
+// The teacher's back/on buttons, floating over the text in the bottom-right corner. Round, white
+// with the header buttons' outline and a soft shadow so they read against any line behind them,
+// and below the contents drawer so that still covers them. Nested under `.classroom-stepper` to
+// outweigh Paragon's button rules.
+.classroom-stepper {
+  position: fixed;
+  z-index: 1030;
+  right: brand.$spacing-6;
+  bottom: brand.$spacing-6;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: brand.$spacing-2;
+
+  // A white pill with the header buttons' outline and a soft shadow, so it reads against any
+  // line behind it, and a word beside the arrow so nobody has to guess what it does.
+  .classroom-stepper__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: brand.$spacing-2;
+    box-sizing: border-box;
+    height: 44px;
+    padding: 0 brand.$spacing-4 0 brand.$spacing-3;
+    border: 1px solid brand.$border-color;
+    border-radius: 999px;
+    background: brand.$color-white;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+    color: brand.$text-color;
+    font-size: brand.$font-size-caption;
+    font-weight: brand.$font-weight-label;
+    line-height: 1;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background brand.$interaction-transition, border-color brand.$interaction-transition;
+
+    &:hover:not(:disabled),
+    &:focus-visible {
+      border-color: brand.$color-bark;
+      background: brand.$color-linen;
+    }
+
+    &:focus-visible {
+      outline: brand.$focus-ring-width solid brand.$focus-ring-color;
+      outline-offset: 2px;
+    }
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: default;
+    }
+  }
+}
+
+// The student's "Live" pill. The dot blinks red while the teacher is in the class and rests in a
+// muted red while they are away; the pill is otherwise the same white pill as the teacher's.
+.classroom-stepper .classroom-live {
+  gap: brand.$spacing-2;
+  padding: 0 brand.$spacing-4 0 brand.$spacing-3;
+  color: brand.$text-color-muted;
+  font-weight: brand.$font-weight-semibold;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+}
+
+.classroom-live__dot {
+  flex: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: brand.$color-danger-border;
+}
+
+.classroom-stepper .classroom-live--on {
+  color: brand.$color-danger-dark;
+
+  .classroom-live__dot {
+    background: brand.$color-danger;
+    animation: classroom-live-blink 1.4s ease-in-out infinite;
+  }
+}
+
+@keyframes classroom-live-blink {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(brand.$color-danger, 0.45); }
+  50% { opacity: 0.35; box-shadow: 0 0 0 5px rgba(brand.$color-danger, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .classroom-live--on .classroom-live__dot {
+    animation: none;
+  }
+}
+
+// On a phone the buttons keep their place in the corner but pop more against the text behind
+// them: a firmer edge, a stronger shadow, and a little taller.
+@media (max-width: 575px) {
+  .classroom-stepper {
+    right: brand.$spacing-4;
+    bottom: brand.$spacing-4;
+
+    .classroom-stepper__button {
+      height: 48px;
+      border: 2px solid brand.$color-bark;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.28);
+    }
+  }
+}
+
+// A class the student left, in their list: the same row, with the way back said plainly.
+.classroom-classes__left {
+  color: brand.$primary;
+  font-weight: brand.$font-weight-label;
 }
