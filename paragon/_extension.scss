@@ -1096,6 +1096,9 @@ main:has(> .course-partner-page) + .site-footer {
 }
 
 .classroom-page__title {
+  // Takes the room the controls leave and wraps a long name inside it, rather than the name's
+  // full length pushing the controls down onto a line of their own at the left.
+  flex: 1 1 280px;
   min-width: 0;
 }
 
@@ -1109,9 +1112,12 @@ main:has(> .course-partner-page) + .site-footer {
 
 .classroom-page__side {
   display: flex;
+  flex: none;
   flex-direction: column;
   gap: brand.$spacing-3;
   align-items: flex-end;
+  // If there is truly no room beside the title, they drop below but stay at the right.
+  margin-left: auto;
 }
 
 // "Teaching", above the class's name, in red: the one place a teacher is told what they are
@@ -1133,7 +1139,9 @@ main:has(> .course-partner-page) + .site-footer {
 @media (max-width: 575px) {
   // One column: the people count and controls drop under the title, from the left.
   .classroom-page__side {
+    flex: 1 1 100%;
     align-items: flex-start;
+    margin-left: 0;
     width: 100%;
   }
 
@@ -1492,6 +1500,96 @@ main:has(> .course-partner-page) + .site-footer {
   margin-bottom: brand.$spacing-2;
 }
 
+// "Your classes": a wider, left-aligned page, with the heading and the teacher's main action
+// on one line and each class a card beneath.
+.classroom-page__join.classroom-page__home {
+  max-width: 680px;
+  margin: brand.$spacing-12 auto;
+  text-align: left;
+
+  h1 {
+    margin-bottom: brand.$spacing-1;
+  }
+}
+
+.classroom-classes__head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: brand.$spacing-3 brand.$spacing-4;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: brand.$spacing-6;
+}
+
+.classroom-classes__count {
+  margin: 0;
+  color: brand.$text-color-muted;
+  font-size: brand.$font-size-caption;
+}
+
+// "Classes you teach" and "Classes you joined": a small heading over each group.
+.classroom-classes__section {
+  margin-bottom: brand.$spacing-6;
+}
+
+.classroom-classes__section-title {
+  margin: 0 0 brand.$spacing-3;
+  color: brand.$text-color-muted;
+  font-family: brand.$font-family-brand-ui;
+  font-size: brand.$font-size-label;
+  font-weight: brand.$font-weight-semibold;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+}
+
+// A class you teach stands out: a warm wash, and a button-like "Continue teaching"
+// where a student's card has only an arrow, so it is plain that pressing it takes you back to
+// the class you are running.
+.classroom-classes__item--teacher {
+  background: brand.$color-parchment;
+}
+
+.classroom-classes__continue {
+  display: inline-flex;
+  flex: none;
+  gap: brand.$spacing-1;
+  align-items: center;
+  padding: brand.$spacing-2 brand.$spacing-3 brand.$spacing-2 brand.$spacing-4;
+  border-radius: 999px;
+  background: brand.$primary;
+  color: brand.$primary-contrast;
+  font-size: brand.$font-size-caption;
+  font-weight: brand.$font-weight-label;
+  white-space: nowrap;
+  transition: background brand.$interaction-transition;
+}
+
+.classroom-classes__item--teacher:hover .classroom-classes__continue {
+  background: brand.$primary-hover;
+}
+
+.classroom-classes__codeprompt {
+  margin: brand.$spacing-6 0 0;
+  padding-top: brand.$spacing-4;
+  border-top: 1px solid brand.$border-color;
+  color: brand.$text-color-muted;
+  font-size: brand.$font-size-caption;
+
+  .btn-link {
+    padding: 0;
+    font-size: inherit;
+    vertical-align: baseline;
+  }
+}
+
+// The text a class is reading, under its name when the two differ.
+.classroom-classes__title {
+  color: brand.$text-color-muted;
+  font-family: brand.$font-family-course-content;
+  font-size: brand.$font-size-caption;
+  line-height: 1.5;
+}
+
 .classroom-page__switch {
   margin-top: brand.$spacing-6;
   padding-top: brand.$spacing-4;
@@ -1575,8 +1673,10 @@ main:has(> .course-partner-page) + .site-footer {
 
 .classroom-classes__item {
   display: flex;
-  flex-direction: column;
-  gap: brand.$spacing-2;
+  flex-direction: row;
+  gap: brand.$spacing-3;
+  align-items: center;
+  justify-content: space-between;
   width: 100%;
   min-height: brand.$minimum-touch-target;
   padding: brand.$spacing-4;
@@ -1591,12 +1691,34 @@ main:has(> .course-partner-page) + .site-footer {
 
   &:hover {
     border-color: brand.$color-bark;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
   }
 
   &:focus-visible {
     outline: brand.$focus-ring-width solid brand.$focus-ring-color;
     outline-offset: 2px;
   }
+}
+
+// The name and what the class is, stacked, with the way in at the right.
+.classroom-classes__text {
+  display: flex;
+  flex-direction: column;
+  gap: brand.$spacing-2;
+  min-width: 0;
+}
+
+.classroom-classes__go {
+  display: inline-flex;
+  flex: none;
+  color: brand.$text-color-muted;
+  transform: rotate(-90deg);
+  transition: color brand.$interaction-transition, transform brand.$interaction-transition;
+}
+
+.classroom-classes__item:hover .classroom-classes__go {
+  color: brand.$color-bark;
+  transform: rotate(-90deg) translateY(2px);
 }
 
 // A class's name is often Tibetan, so it takes the content face at a calm size.
@@ -1637,6 +1759,23 @@ main:has(> .course-partner-page) + .site-footer {
 .classroom-classes__join {
   padding-top: brand.$spacing-6;
   border-top: 1px solid brand.$border-color;
+
+  // The code and its button on one line: the one thing to do here is type six characters and press.
+  .classroom-classes__join-row {
+    display: flex;
+    gap: brand.$spacing-3;
+    align-items: stretch;
+  }
+
+  .classroom-classes__code {
+    flex: 1 1 auto;
+    min-width: 0;
+    font-family: brand.$font-family-brand-ui;
+    font-size: 1.25rem;
+    font-weight: brand.$font-weight-semibold;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+  }
 
   h2 {
     margin-bottom: brand.$spacing-4;
@@ -3023,5 +3162,25 @@ $classroom-note-pink: rgba(240, 98, 146, 0.32);
 // A class the student left, in their list: the same row, with the way back said plainly.
 .classroom-classes__left {
   color: brand.$primary;
+  font-weight: brand.$font-weight-label;
+}
+
+// Two date fields side by side: when a class starts and when it ends.
+.classroom-page__dates {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: brand.$spacing-3;
+  margin-bottom: brand.$spacing-3;
+}
+
+@media (max-width: 575px) {
+  .classroom-page__dates {
+    grid-template-columns: 1fr;
+  }
+}
+
+// On a class card: when it is held, in the brand brown so it reads as a fact about the class.
+.classroom-classes__dates {
+  color: brand.$color-deep-brown;
   font-weight: brand.$font-weight-label;
 }
